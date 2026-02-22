@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MJ Soluções - Sistema de Gestão</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <!-- jsPDF e autoTable -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+    <!-- SheetJS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <style>
+        :root {
+            --primary-green: #2ecc71;
+            --soft-green: #d5f5e3;
+            --primary-blue: #3498db;
+            --soft-blue: #d4e6f1;
+            --dark-gray: #2c3e50;
+            --light-gray: #ecf0f1;
+        }
+        body {
+            background-color: #f8fafc;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .navbar-brand {
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-green), var(--primary-blue)) !important;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .card {
+            border-radius: 20px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.05);
+            border: none;
+            transition: all 0.3s ease;
+            background: white;
+            margin-bottom: 20px;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(46, 204, 113, 0.1);
+        }
+        .btn-success {
+            background-color: var(--primary-green);
+            border-color: var(--primary-green);
+        }
+        .btn-success:hover {
+            background-color: #27ae60;
+            border-color: #27ae60;
+        }
+        .btn-primary {
+            background-color: var(--primary-blue);
+            border-color: var(--primary-blue);
+        }
+        .btn-primary:hover {
+            background-color: #2980b9;
+            border-color: #2980b9;
+        }
+        .nav-tabs .nav-link.active {
+            background: linear-gradient(135deg, var(--soft-green), var(--soft-blue));
+            border-color: transparent;
+            font-weight: 600;
+            color: var(--dark-gray);
+        }
+        .nav-tabs .nav-link {
+            color: var(--dark-gray);
+            border-radius: 10px 10px 0 0;
+            margin-right: 5px;
+        }
+        .table thead {
+            background: linear-gradient(135deg, var(--primary-green), var(--primary-blue));
+            color: white;
+        }
+        .footer {
+            background: var(--dark-gray);
+            color: white;
+            padding: 15px 0;
+            margin-top: 30px;
+        }
+        .stat-card {
+            border-left: 5px solid var(--primary-green);
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.03);
+        }
+        .search-box {
+            max-width: 300px;
+            border-radius: 20px;
+            border: 1px solid #ddd;
+            padding: 8px 15px;
+        }
+        .produto-lista {
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            padding: 8px;
+            background: #f8f9fa;
+        }
+        .produto-item {
+            cursor: pointer;
+            padding: 8px;
+            border-bottom: 1px solid #e9ecef;
+            transition: background 0.2s;
+            border-radius: 8px;
+        }
+        .produto-item:hover {
+            background: var(--soft-green);
+        }
+        .item-venda {
+            background: #f0f9ff;
+            border-radius: 12px;
+            padding: 12px;
+            margin: 8px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-left: 4px solid var(--primary-blue);
+        }
+        .chart-container {
+            position: relative;
+            height: 250px;
+            width: 100%;
+        }
+        .empresa-header {
+            background: white;
+            border-radius: 20px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            border-left: 6px solid var(--primary-green);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-dark">
+        <div class="container-fluid">
+            <span class="navbar-brand mb-0 h1">
+                <i class="bi bi-pc-display me-2"></i>MJ SOLUÇÕES
+            </span>
+        </div>
+    </nav>
+
+    <!-- Dados da Empresa (fixo) -->
+    <div class="container mt-3">
+        <div class="empresa-header">
+            <div class="row align-items-center">
+                <div class="col-md-3"><i class="bi bi-building me-2"></i> <strong>MJ Soluções Ltda</strong></div>
+                <div class="col-md-3"><i class="bi bi-qr-code me-2"></i> CNPJ: 12.345.678/0001-99</div>
+                <div class="col-md-3"><i class="bi bi-geo-alt me-2"></i> Rua das Inovações, 100 - Centro</div>
+                <div class="col-md-3"><i class="bi bi-telephone me-2"></i> (11) 99999-8888</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Conteúdo principal -->
+    <div class="container mt-3">
+        <!-- Abas -->
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="venda-tab" data-bs-toggle="tab" data-bs-target="#venda" type="button" role="tab"><i class="bi bi-cart-plus"></i> Venda</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="clientes-tab" data-bs-toggle="tab" data-bs-target="#clientes" type="button" role="tab"><i class="bi bi-people"></i> Clientes</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="produtos-tab" data-bs-toggle="tab" data-bs-target="#produtos" type="button" role="tab"><i class="bi bi-boxes"></i> Produtos</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="gastos-tab" data-bs-toggle="tab" data-bs-target="#gastos" type="button" role="tab"><i class="bi bi-cash-stack"></i> Controle de Gastos</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="relatorios-tab" data-bs-toggle="tab" data-bs-target="#relatorios" type="button" role="tab"><i class="bi bi-file-text"></i> Relatórios</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="dashboard-tab" data-bs-toggle="tab" data-bs-target="#dashboard" type="button" role="tab"><i class="bi bi-bar-chart-line"></i> Dashboard</button>
+            </li>
+        </ul>
+
+        <!-- Conteúdo das abas -->
+        <div class="tab-content p-4 border border-top-0 bg-white rounded-bottom shadow-sm" id="myTabContent">
+            <!-- ABA VENDA -->
+            <div class="tab-pane fade show active" id="venda" role="tabpanel">
+                <h4 class="mb-3" style="color: var(--primary-green);"><i class="bi bi-cart-plus me-2"></i>Nova Venda</h4>
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="card p-3">
+                            <h5><i class="bi bi-person me-2" style="color: var(--primary-blue);"></i>Cliente</h5>
+                            <select id="clienteSelect" class="form-select mb-2" onchange="toggleNovoCliente()">
+                                <option value="">-- Novo Cliente --</option>
+                            </select>
+                            <div id="novoClienteArea">
+                                <input type="text" id="novoClienteNome" class="form-control mb-2" placeholder="Nome completo *">
+                                <input type="text" id="novoClienteEndereco" class="form-control mb-2" placeholder="Endereço">
+                                <input type="text" id="novoClienteCidade" class="form-control mb-2" placeholder="Cidade">
+                                <input type="text" id="novoClienteEstado" class="form-control mb-2" placeholder="Estado">
+                                <input type="text" id="novoClienteCep" class="form-control mb-2" placeholder="CEP">
+                                <input type="email" id="novoClienteEmail" class="form-control mb-2" placeholder="E-mail">
+                                <input type="text" id="novoClienteTelefone" class="form-control mb-2" placeholder="Telefone">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-7">
+                        <div class="card p-3">
+                            <h5><i class="bi bi-search me-2" style="color: var(--primary-blue);"></i>Buscar Produtos</h5>
+                            <input type="text" id="buscaProduto" class="form-control" placeholder="Digite o nome do produto..." onkeyup="filtrarProdutosVenda()">
+                            <div id="listaProdutosVenda" class="produto-lista mt-2"></div>
+                        </div>
+                        <div class="card p-3 mt-3">
+                            <h5><i class="bi bi-cart-check me-2" style="color: var(--primary-blue);"></i>Itens da Venda</h5>
+                            <div id="itensVendaContainer"></div>
+                            <hr>
+                            <div class="row align-items-center">
+                                <div class="col-md-4">
+                                    <select id="formaPagamento" class="form-select" onchange="toggleTroco()">
+                                        <option value="dinheiro">Dinheiro</option>
+                                        <option value="cartao">Cartão</option>
+                                        <option value="pix">PIX</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4" id="trocoArea">
+                                    <input type="number" id="valorRecebido" class="form-control" step="0.01" min="0" placeholder="Valor recebido" oninput="calcularTroco()">
+                                    <small class="text-muted">Troco: R$ <span id="trocoValor">0,00</span></small>
+                                </div>
+                                <div class="col-md-4 text-end">
+                                    <h4 class="d-inline me-3">R$ <span id="totalVenda">0,00</span></h4>
+                                    <button class="btn btn-success" onclick="finalizarVenda()"><i class="bi bi-check-lg"></i> Finalizar</button>
+                                </div>
+                            </div>
+                            <div id="vendaMsg" class="mt-2"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ABA CLIENTES -->
+            <div class="tab-pane fade" id="clientes" role="tabpanel">
+                <h4 class="mb-3" style="color: var(--primary-green);"><i class="bi bi-people me-2"></i>Gerenciar Clientes</h4>
+                <div class="d-flex justify-content-between mb-3">
+                    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalCliente" onclick="limparModalCliente()">
+                        <i class="bi bi-plus-circle"></i> Novo Cliente
+                    </button>
+                    <input type="text" id="buscaClientes" class="form-control search-box" placeholder="Buscar cliente..." onkeyup="filtrarClientes()">
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover" id="tabelaClientes">
+                        <thead>
+                            <tr><th>ID</th><th>Nome</th><th>Endereço</th><th>Telefone</th><th>Email</th><th>Ações</th></tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ABA PRODUTOS -->
+            <div class="tab-pane fade" id="produtos" role="tabpanel">
+                <h4 class="mb-3" style="color: var(--primary-green);"><i class="bi bi-boxes me-2"></i>Gerenciar Produtos</h4>
+                <div class="d-flex justify-content-between mb-3">
+                    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalProduto" onclick="limparModalProduto()">
+                        <i class="bi bi-plus-circle"></i> Novo Produto
+                    </button>
+                    <input type="text" id="buscaProdutos" class="form-control search-box" placeholder="Buscar produto..." onkeyup="filtrarProdutos()">
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover" id="tabelaProdutos">
+                        <thead>
+                            <tr><th>ID</th><th>Nome</th><th>Custo</th><th>Preço</th><th>Estoque</th><th>Margem</th><th>Ações</th></tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ABA CONTROLE DE GASTOS -->
+            <div class="tab-pane fade" id="gastos" role="tabpanel">
+                <h4 class="mb-3" style="color: var(--primary-green);"><i class="bi bi-cash-stack me-2"></i>Controle de Gastos</h4>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card p-3">
+                            <h5 class="text-success"><i class="bi bi-arrow-down-circle"></i> Entradas</h5>
+                            <button class="btn btn-outline-success btn-sm mb-2" data-bs-toggle="modal" data-bs-target="#modalGasto" onclick="limparModalGasto('entrada')">
+                                <i class="bi bi-plus"></i> Nova Entrada
+                            </button>
+                            <div id="listaEntradas" class="small"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card p-3">
+                            <h5 class="text-danger"><i class="bi bi-arrow-up-circle"></i> Saídas</h5>
+                            <button class="btn btn-outline-danger btn-sm mb-2" data-bs-toggle="modal" data-bs-target="#modalGasto" onclick="limparModalGasto('saida')">
+                                <i class="bi bi-plus"></i> Nova Saída
+                            </button>
+                            <div id="listaSaidas" class="small"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ABA RELATÓRIOS -->
+            <div class="tab-pane fade" id="relatorios" role="tabpanel">
+                <h4 class="mb-3" style="color: var(--primary-green);"><i class="bi bi-file-text me-2"></i>Relatórios de Vendas</h4>
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label>Data Início</label>
+                        <input type="date" id="relInicio" class="form-control">
+                    </div>
+                    <div class="col-md-3">
+                        <label>Data Fim</label>
+                        <input type="date" id="relFim" class="form-control">
+                    </div>
+                    <div class="col-md-3">
+                        <label>Cliente</label>
+                        <input type="text" id="relCliente" class="form-control" placeholder="Nome">
+                    </div>
+                    <div class="col-md-3 d-flex align-items-end gap-2">
+                        <button class="btn btn-success" onclick="gerarRelatorio()"><i class="bi bi-search"></i> Gerar</button>
+                        <button class="btn btn-primary" onclick="exportarPDF()"><i class="bi bi-file-pdf"></i> PDF</button>
+                        <button class="btn btn-success" onclick="exportarExcel()"><i class="bi bi-file-excel"></i> Excel</button>
+                    </div>
+                </div>
+                <hr>
+                <div id="relatorioResultado" class="mt-3"></div>
+            </div>
+
+            <!-- ABA DASHBOARD -->
+            <div class="tab-pane fade" id="dashboard" role="tabpanel">
+                <h4 class="mb-3" style="color: var(--primary-green);"><i class="bi bi-bar-chart-line me-2"></i>Dashboard</h4>
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <h6 class="text-muted">Total de Vendas (mês)</h6>
+                            <h3 id="totalVendasMes" class="fw-bold" style="color: var(--primary-green);">R$ 0,00</h3>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <h6 class="text-muted">Custo Total (mês)</h6>
+                            <h3 id="totalCustoMes" class="fw-bold text-danger">R$ 0,00</h3>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <h6 class="text-muted">Lucro Bruto (mês)</h6>
+                            <h3 id="totalLucroMes" class="fw-bold" style="color: var(--primary-blue);">R$ 0,00</h3>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <h6 class="text-muted">Estoque Total (itens)</h6>
+                            <h3 id="totalEstoqueItens" class="fw-bold" style="color: var(--primary-green);">0</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <div class="card p-3">
+                            <h5 class="text-center">Vendas por Dia (últimos 7 dias)</h5>
+                            <div class="chart-container">
+                                <canvas id="graficoVendasLinha"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card p-3">
+                            <h5 class="text-center">Produtos em Estoque</h5>
+                            <div class="chart-container">
+                                <canvas id="graficoEstoquePizza"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAIS -->
+    <!-- Modal Cliente -->
+    <div class="modal fade" id="modalCliente" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header" style="background: linear-gradient(135deg, var(--soft-green), var(--soft-blue));">
+                    <h5 class="modal-title" id="modalClienteTitle">Novo Cliente</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="clienteId">
+                    <div class="row">
+                        <div class="col-md-6 mb-3"><label>Nome *</label><input type="text" id="modalClienteNome" class="form-control"></div>
+                        <div class="col-md-6 mb-3"><label>Endereço</label><input type="text" id="modalClienteEndereco" class="form-control"></div>
+                        <div class="col-md-4 mb-3"><label>Cidade</label><input type="text" id="modalClienteCidade" class="form-control"></div>
+                        <div class="col-md-4 mb-3"><label>Estado</label><input type="text" id="modalClienteEstado" class="form-control"></div>
+                        <div class="col-md-4 mb-3"><label>CEP</label><input type="text" id="modalClienteCep" class="form-control"></div>
+                        <div class="col-md-6 mb-3"><label>Email</label><input type="email" id="modalClienteEmail" class="form-control"></div>
+                        <div class="col-md-6 mb-3"><label>Telefone</label><input type="text" id="modalClienteTelefone" class="form-control"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button class="btn btn-success" onclick="salvarCliente()">Salvar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Produto -->
+    <div class="modal fade" id="modalProduto" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="background: linear-gradient(135deg, var(--soft-green), var(--soft-blue));">
+                    <h5 class="modal-title" id="modalProdutoTitle">Novo Produto</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="produtoId">
+                    <div class="mb-3"><label>Nome</label><input type="text" id="modalProdutoNome" class="form-control"></div>
+                    <div class="mb-3"><label>Custo (R$)</label><input type="number" step="0.01" id="modalProdutoCusto" class="form-control"></div>
+                    <div class="mb-3"><label>Preço (R$)</label><input type="number" step="0.01" id="modalProdutoPreco" class="form-control"></div>
+                    <div class="mb-3"><label>Estoque Inicial</label><input type="number" id="modalProdutoEstoque" class="form-control"></div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button class="btn btn-success" onclick="salvarProduto()">Salvar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Gasto -->
+    <div class="modal fade" id="modalGasto" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="background: linear-gradient(135deg, var(--soft-green), var(--soft-blue));">
+                    <h5 class="modal-title" id="modalGastoTitle">Novo Gasto</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="gastoId">
+                    <input type="hidden" id="gastoTipo" value="entrada">
+                    <div class="mb-3"><label>Data</label><input type="date" id="gastoData" class="form-control"></div>
+                    <div class="mb-3"><label>Descrição</label><input type="text" id="gastoDescricao" class="form-control"></div>
+                    <div class="mb-3"><label>Valor (R$)</label><input type="number" step="0.01" id="gastoValor" class="form-control"></div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button class="btn btn-success" onclick="salvarGasto()">Salvar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Comprovante -->
+    <div class="modal fade" id="modalComprovante" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header" style="background: linear-gradient(135deg, var(--primary-green), var(--primary-blue)); color: white;">
+                    <h5 class="modal-title"><i class="bi bi-receipt"></i> Comprovante de Venda</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="comprovanteBody"></div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                    <button class="btn btn-primary" onclick="imprimirComprovante()"><i class="bi bi-printer"></i> Imprimir</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rodapé -->
+    <footer class="footer text-center">
+        <div class="container">
+            <span>MJ Soluções - Sistema de Gestão v2.0</span>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // ==================== FIREBASE CONFIG ====================
+        const firebaseConfig = {
+            apiKey: "AIzaSyDtSMbTWT3EX4RAUJf3omVUbbsEl-U0PRU",
+            authDomain: "mjsis-50e6c.firebaseapp.com",
+            projectId: "mjsis-50e6c",
+            storageBucket: "mjsis-50e6c.firebasestorage.app",
+            messagingSenderId: "566986164188",
+            appId: "1:566986164188:web:720d4a3237fc2bd7d17119"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // ==================== VARIÁVEIS GLOBAIS ====================
+        let itensVenda = [];
+        let todosClientes = [];
+        let todosProdutos = [];
+
+        // ==================== UTILITÁRIOS ====================
+        function formatarMoeda(valor) {
+            return valor.toFixed(2).replace('.', ',');
+        }
+
+        // ==================== FUNÇÕES DE LEITURA ====================
+        async function getClientes() {
+            const snap = await db.collection('clientes').get();
+            return snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        }
+        async function getProdutos() {
+            const snap = await db.collection('produtos').get();
+            return snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        }
+        async function getVendas() {
+            const snap = await db.collection('vendas').get();
+            return snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        }
+        async function getGastos() {
+            const snap = await db.collection('gastos').get();
+            return snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        }
+
+        // ==================== ABA VENDA ====================
+        async function carregarVenda() {
+            const clientes = await getClientes();
+            todosClientes = clientes;
+            const select = document.getElementById('clienteSelect');
+            select.innerHTML = '<option value="">-- Novo Cliente --</option>';
+            clientes.forEach(c => {
+                const opt = document.createElement('option');
+                opt.value = c.id;
+                opt.textContent = c.nome;
+                select.appendChild(opt);
+            });
+            toggleNovoCliente();
+            itensVenda = [];
+            atualizarListaItensVenda();
+            document.getElementById('buscaProduto').value = '';
+            document.getElementById('listaProdutosVenda').innerHTML = '';
+            document.getElementById('formaPagamento').value = 'dinheiro';
+            document.getElementById('valorRecebido').value = '';
+            document.getElementById('trocoValor').innerText = '0,00';
+            toggleTroco();
+            await filtrarProdutosVenda();
+        }
+
+        window.toggleNovoCliente = function() {
+            const select = document.getElementById('clienteSelect');
+            const area = document.getElementById('novoClienteArea');
+            area.style.display = select.value === '' ? 'block' : 'none';
+        };
+
+        window.toggleTroco = function() {
+            const forma = document.getElementById('formaPagamento').value;
+            const trocoArea = document.getElementById('trocoArea');
+            trocoArea.style.display = forma === 'dinheiro' ? 'block' : 'none';
+            if (forma !== 'dinheiro') {
+                document.getElementById('valorRecebido').value = '';
+                document.getElementById('trocoValor').innerText = '0,00';
+            }
+        };
+
+        window.calcularTroco = function() {
+            const total = parseFloat(document.getElementById('totalVenda').innerText.replace(',', '.')) || 0;
+            const recebido = parseFloat(document.getElementById('valorRecebido').value) || 0;
+            const troco = recebido - total;
+            document.getElementById('trocoValor').innerText = troco >= 0 ? formatarMoeda(troco) : '0,00';
+        };
+
+        window.filtrarProdutosVenda = async function() {
+            const busca = document.getElementById('buscaProduto').value.toLowerCase();
+            const produtos = await getProdutos();
+            todosProdutos = produtos;
+            const lista = document.getElementById('listaProdutosVenda');
+            lista.innerHTML = '';
+            produtos.filter(p => p.nome.toLowerCase().includes(busca) && p.estoque > 0).forEach(p => {
+                const div = document.createElement('div');
+                div.className = 'produto-item d-flex justify-content-between align-items-center';
+                div.innerHTML = `<span><strong>${p.nome}</strong> - R$ ${p.preco.toFixed(2)} (estoque: ${p.estoque})</span>
+                                 <button class="btn btn-sm btn-success" onclick="adicionarItemVenda('${p.id}', '${p.nome}', ${p.preco}, ${p.custo}, ${p.estoque})"><i class="bi bi-plus"></i></button>`;
+                lista.appendChild(div);
+            });
+        };
+
+        window.adicionarItemVenda = function(id, nome, preco, custo, estoque) {
+            const existente = itensVenda.find(i => i.produtoId === id);
+            if (existente) {
+                if (existente.quantidade + 1 > estoque) {
+                    alert('Quantidade excede o estoque!');
+                    return;
+                }
+                existente.quantidade++;
+                existente.subtotal = existente.quantidade * preco;
+            } else {
+                if (1 > estoque) {
+                    alert('Produto sem estoque!');
+                    return;
+                }
+                itensVenda.push({
+                    produtoId: id,
+                    nome: nome,
+                    quantidade: 1,
+                    preco: preco,
+                    custo: custo,
+                    subtotal: preco
+                });
+            }
+            atualizarListaItensVenda();
+        };
+
+        window.alterarQuantidadeItem = function(index, novaQtd, estoque) {
+            if (novaQtd < 1) {
+                itensVenda.splice(index, 1);
+            } else {
+                const item = itensVenda[index];
+                if (novaQtd > estoque) {
+                    alert('Quantidade superior ao estoque!');
+                    return;
+                }
+                item.quantidade = novaQtd;
+                item.subtotal = novaQtd * item.preco;
+            }
+            atualizarListaItensVenda();
+        };
+
+        window.removerItemVenda = function(index) {
+            itensVenda.splice(index, 1);
+            atualizarListaItensVenda();
+        };
+
+        function atualizarListaItensVenda() {
+            const container = document.getElementById('itensVendaContainer');
+            container.innerHTML = '';
+            let total = 0;
+            itensVenda.forEach((item, idx) => {
+                total += item.subtotal;
+                const div = document.createElement('div');
+                div.className = 'item-venda';
+                div.innerHTML = `
+                    <span><strong>${item.nome}</strong> R$ ${item.preco.toFixed(2)} x 
+                        <input type="number" min="1" value="${item.quantidade}" style="width:70px;" onchange="alterarQuantidadeItem(${idx}, parseInt(this.value), ${item.estoque})">
+                    = R$ ${item.subtotal.toFixed(2)}</span>
+                    <i class="bi bi-trash text-danger" style="cursor:pointer;" onclick="removerItemVenda(${idx})"></i>
+                `;
+                container.appendChild(div);
+            });
+            document.getElementById('totalVenda').innerText = total.toFixed(2).replace('.', ',');
+            if (document.getElementById('formaPagamento').value === 'dinheiro') calcularTroco();
+        }
+
+        window.finalizarVenda = async function() {
+            if (itensVenda.length === 0) {
+                document.getElementById('vendaMsg').innerHTML = '<div class="alert alert-warning">Adicione itens à venda.</div>';
+                return;
+            }
+            let clienteId = document.getElementById('clienteSelect').value;
+            const novoNome = document.getElementById('novoClienteNome').value.trim();
+            if (!clienteId && !novoNome) {
+                document.getElementById('vendaMsg').innerHTML = '<div class="alert alert-warning">Selecione ou cadastre um cliente.</div>';
+                return;
+            }
+            let clienteNome = '';
+            if (!clienteId) {
+                const clientes = await getClientes();
+                const novoCliente = {
+                    nome: novoNome,
+                    endereco: document.getElementById('novoClienteEndereco').value.trim(),
+                    cidade: document.getElementById('novoClienteCidade').value.trim(),
+                    estado: document.getElementById('novoClienteEstado').value.trim(),
+                    cep: document.getElementById('novoClienteCep').value.trim(),
+                    email: document.getElementById('novoClienteEmail').value.trim(),
+                    telefone: document.getElementById('novoClienteTelefone').value.trim()
+                };
+                const docRef = await db.collection('clientes').add(novoCliente);
+                clienteId = docRef.id;
+                clienteNome = novoNome;
+            } else {
+                const clienteDoc = await db.collection('clientes').doc(clienteId).get();
+                clienteNome = clienteDoc.data().nome;
+            }
+
+            const produtos = await getProdutos();
+            for (let item of itensVenda) {
+                const prod = produtos.find(p => p.id === item.produtoId);
+                if (!prod || prod.estoque < item.quantidade) {
+                    document.getElementById('vendaMsg').innerHTML = `<div class="alert alert-danger">Estoque insuficiente para ${item.nome}.</div>`;
+                    return;
+                }
+            }
+
+            const forma = document.getElementById('formaPagamento').value;
+            const recebido = forma === 'dinheiro' ? parseFloat(document.getElementById('valorRecebido').value) || 0 : 0;
+            const total = itensVenda.reduce((acc, i) => acc + i.subtotal, 0);
+            if (forma === 'dinheiro' && recebido < total) {
+                document.getElementById('vendaMsg').innerHTML = '<div class="alert alert-danger">Valor recebido insuficiente.</div>';
+                return;
+            }
+
+            const venda = {
+                data: new Date().toISOString().split('T')[0],
+                hora: new Date().toLocaleTimeString(),
+                clienteId: clienteId,
+                clienteNome: clienteNome,
+                formaPagamento: forma,
+                total: total,
+                itens: itensVenda.map(i => ({
+                    produtoId: i.produtoId,
+                    nome: i.nome,
+                    quantidade: i.quantidade,
+                    preco: i.preco,
+                    custo: i.custo,
+                    subtotal: i.subtotal
+                }))
+            };
+            await db.collection('vendas').add(venda);
+
+            for (let item of itensVenda) {
+                const prod = produtos.find(p => p.id === item.produtoId);
+                prod.estoque -= item.quantidade;
+                await db.collection('produtos').doc(item.produtoId).update({ estoque: prod.estoque });
+            }
+
+            exibirComprovante(venda, clienteNome);
+
+            itensVenda = [];
+            atualizarListaItensVenda();
+            document.getElementById('vendaMsg').innerHTML = '<div class="alert alert-success">Venda finalizada!</div>';
+            document.getElementById('valorRecebido').value = '';
+            document.getElementById('trocoValor').innerText = '0,00';
+            await carregarVenda();
+        };
+
+        function exibirComprovante(venda, clienteNome) {
+            let html = `
+                <div style="font-family: 'Courier New', monospace; padding: 20px;">
+                    <h4 class="text-center">COMPROVANTE DE COMPRA</h4>
+                    <p><strong>Razão Social:</strong> MJ Soluções Ltda</p>
+                    <p><strong>CNPJ:</strong> 12.345.678/0001-99</p>
+                    <p><strong>Endereço:</strong> Rua das Inovações, 100 - Centro</p>
+                    <p><strong>Telefone:</strong> (11) 99999-8888</p>
+                    <hr>
+                    <p><strong>Cliente:</strong> ${clienteNome}</p>
+                    <table style="width:100%; border-collapse: collapse;">
+                        <thead><tr><th>Produto</th><th>Qtd</th><th>Valor Unit.</th><th>Valor Total</th></tr></thead>
+                        <tbody>
+            `;
+            venda.itens.forEach(i => {
+                html += `<tr><td>${i.nome}</td><td>${i.quantidade}</td><td>R$ ${i.preco.toFixed(2)}</td><td>R$ ${i.subtotal.toFixed(2)}</td></tr>`;
+            });
+            html += `</tbody></table>`;
+            html += `<p><strong>Data da Compra:</strong> ${venda.data} ${venda.hora}</p>`;
+            html += `<p><strong>Forma de Pagamento:</strong> ${venda.formaPagamento.toUpperCase()}</p>`;
+            if (venda.formaPagamento === 'dinheiro') {
+                const recebido = parseFloat(document.getElementById('valorRecebido').value) || 0;
+                const troco = recebido - venda.total;
+                html += `<p><strong>Valor recebido:</strong> R$ ${recebido.toFixed(2)}</p>`;
+                html += `<p><strong>Troco:</strong> R$ ${troco.toFixed(2)}</p>`;
+            }
+            html += `<hr><p class="text-center">Agradecemos a preferência!<br>Este é um comprovante não fiscal.</p>`;
+            html += `<h5 class="text-center">MJ Soluções®</h5></div>`;
+            document.getElementById('comprovanteBody').innerHTML = html;
+            new bootstrap.Modal(document.getElementById('modalComprovante')).show();
+        }
+
+        window.imprimirComprovante = function() {
+            const conteudo = document.getElementById('comprovanteBody').innerHTML;
+            const win = window.open('', '_blank');
+            win.document.write('<html><head><title>Comprovante</title>');
+            win.document.write('<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">');
+            win.document.write('</head><body class="p-4">' + conteudo + '</body></html>');
+            win.document.close();
+            win.print();
+        };
+
+        // ==================== CLIENTES CRUD ====================
+        async function renderClientes() {
+            const clientes = await getClientes();
+            todosClientes = clientes;
+            filtrarClientes();
+        }
+
+        window.filtrarClientes = function() {
+            const termo = document.getElementById('buscaClientes').value.toLowerCase();
+            const filtrados = todosClientes.filter(c => 
+                c.nome.toLowerCase().includes(termo) || 
+                (c.email && c.email.toLowerCase().includes(termo)) ||
+                (c.telefone && c.telefone.includes(termo))
+            );
+            const tbody = document.querySelector('#tabelaClientes tbody');
+            tbody.innerHTML = '';
+            filtrados.forEach(c => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${c.id.substring(0,6)}...</td>
+                    <td>${c.nome}</td>
+                    <td>${c.cidade || ''}, ${c.estado || ''}</td>
+                    <td>${c.telefone || ''}</td>
+                    <td>${c.email || ''}</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-success" onclick="editarCliente('${c.id}')"><i class="bi bi-pencil"></i></button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="excluirCliente('${c.id}')"><i class="bi bi-trash"></i></button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        };
+
+        window.limparModalCliente = function() {
+            document.getElementById('clienteId').value = '';
+            document.getElementById('modalClienteNome').value = '';
+            document.getElementById('modalClienteEndereco').value = '';
+            document.getElementById('modalClienteCidade').value = '';
+            document.getElementById('modalClienteEstado').value = '';
+            document.getElementById('modalClienteCep').value = '';
+            document.getElementById('modalClienteEmail').value = '';
+            document.getElementById('modalClienteTelefone').value = '';
+            document.getElementById('modalClienteTitle').innerText = 'Novo Cliente';
+        };
+
+        window.editarCliente = async function(id) {
+            const doc = await db.collection('clientes').doc(id).get();
+            const c = doc.data();
+            document.getElementById('clienteId').value = id;
+            document.getElementById('modalClienteNome').value = c.nome || '';
+            document.getElementById('modalClienteEndereco').value = c.endereco || '';
+            document.getElementById('modalClienteCidade').value = c.cidade || '';
+            document.getElementById('modalClienteEstado').value = c.estado || '';
+            document.getElementById('modalClienteCep').value = c.cep || '';
+            document.getElementById('modalClienteEmail').value = c.email || '';
+            document.getElementById('modalClienteTelefone').value = c.telefone || '';
+            document.getElementById('modalClienteTitle').innerText = 'Editar Cliente';
+            new bootstrap.Modal(document.getElementById('modalCliente')).show();
+        };
+
+        window.salvarCliente = async function() {
+            const id = document.getElementById('clienteId').value;
+            const dados = {
+                nome: document.getElementById('modalClienteNome').value.trim(),
+                endereco: document.getElementById('modalClienteEndereco').value.trim(),
+                cidade: document.getElementById('modalClienteCidade').value.trim(),
+                estado: document.getElementById('modalClienteEstado').value.trim(),
+                cep: document.getElementById('modalClienteCep').value.trim(),
+                email: document.getElementById('modalClienteEmail').value.trim(),
+                telefone: document.getElementById('modalClienteTelefone').value.trim()
+            };
+            if (!dados.nome) return alert('Nome é obrigatório.');
+            if (id) await db.collection('clientes').doc(id).update(dados);
+            else await db.collection('clientes').add(dados);
+            await renderClientes();
+            bootstrap.Modal.getInstance(document.getElementById('modalCliente')).hide();
+        };
+
+        window.excluirCliente = async function(id) {
+            if (confirm('Excluir cliente?')) {
+                await db.collection('clientes').doc(id).delete();
+                await renderClientes();
+            }
+        };
+
+        // ==================== PRODUTOS CRUD ====================
+        async function renderProdutos() {
+            const produtos = await getProdutos();
+            todosProdutos = produtos;
+            filtrarProdutos();
+        }
+
+        window.filtrarProdutos = function() {
+            const termo = document.getElementById('buscaProdutos').value.toLowerCase();
+            const filtrados = todosProdutos.filter(p => p.nome.toLowerCase().includes(termo));
+            const tbody = document.querySelector('#tabelaProdutos tbody');
+            tbody.innerHTML = '';
+            filtrados.forEach(p => {
+                const margem = p.custo > 0 ? ((p.preco - p.custo) / p.custo * 100).toFixed(2) : 0;
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${p.id.substring(0,6)}...</td>
+                    <td>${p.nome}</td>
+                    <td>R$ ${p.custo.toFixed(2)}</td>
+                    <td>R$ ${p.preco.toFixed(2)}</td>
+                    <td>${p.estoque}</td>
+                    <td>${margem}%</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-success" onclick="editarProduto('${p.id}')"><i class="bi bi-pencil"></i></button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="excluirProduto('${p.id}')"><i class="bi bi-trash"></i></button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        };
+
+        window.limparModalProduto = function() {
+            document.getElementById('produtoId').value = '';
+            document.getElementById('modalProdutoNome').value = '';
+            document.getElementById('modalProdutoCusto').value = '';
+            document.getElementById('modalProdutoPreco').value = '';
+            document.getElementById('modalProdutoEstoque').value = '';
+            document.getElementById('modalProdutoTitle').innerText = 'Novo Produto';
+        };
+
+        window.editarProduto = async function(id) {
+            const doc = await db.collection('produtos').doc(id).get();
+            const p = doc.data();
+            document.getElementById('produtoId').value = id;
+            document.getElementById('modalProdutoNome').value = p.nome || '';
+            document.getElementById('modalProdutoCusto').value = p.custo || '';
+            document.getElementById('modalProdutoPreco').value = p.preco || '';
+            document.getElementById('modalProdutoEstoque').value = p.estoque || '';
+            document.getElementById('modalProdutoTitle').innerText = 'Editar Produto';
+            new bootstrap.Modal(document.getElementById('modalProduto')).show();
+        };
+
+        window.salvarProduto = async function() {
+            const id = document.getElementById('produtoId').value;
+            const dados = {
+                nome: document.getElementById('modalProdutoNome').value.trim(),
+                custo: parseFloat(document.getElementById('modalProdutoCusto').value),
+                preco: parseFloat(document.getElementById('modalProdutoPreco').value),
+                estoque: parseInt(document.getElementById('modalProdutoEstoque').value)
+            };
+            if (!dados.nome || isNaN(dados.custo) || isNaN(dados.preco) || isNaN(dados.estoque)) {
+                return alert('Preencha todos os campos corretamente.');
+            }
+            if (id) await db.collection('produtos').doc(id).update(dados);
+            else await db.collection('produtos').add(dados);
+            await renderProdutos();
+            bootstrap.Modal.getInstance(document.getElementById('modalProduto')).hide();
+        };
+
+        window.excluirProduto = async function(id) {
+            if (confirm('Excluir produto?')) {
+                await db.collection('produtos').doc(id).delete();
+                await renderProdutos();
+            }
+        };
+
+        // ==================== GASTOS ====================
+        window.limparModalGasto = function(tipo) {
+            document.getElementById('gastoId').value = '';
+            document.getElementById('gastoTipo').value = tipo;
+            document.getElementById('gastoData').value = new Date().toISOString().split('T')[0];
+            document.getElementById('gastoDescricao').value = '';
+            document.getElementById('gastoValor').value = '';
+            document.getElementById('modalGastoTitle').innerText = tipo === 'entrada' ? 'Nova Entrada' : 'Nova Saída';
+        };
+
+        window.salvarGasto = async function() {
+            const id = document.getElementById('gastoId').value;
+            const dados = {
+                tipo: document.getElementById('gastoTipo').value,
+                data: document.getElementById('gastoData').value,
+                descricao: document.getElementById('gastoDescricao').value.trim(),
+                valor: parseFloat(document.getElementById('gastoValor').value)
+            };
+            if (!dados.data || !dados.descricao || isNaN(dados.valor)) return alert('Preencha todos os campos.');
+            if (id) await db.collection('gastos').doc(id).update(dados);
+            else await db.collection('gastos').add(dados);
+            await renderGastos();
+            bootstrap.Modal.getInstance(document.getElementById('modalGasto')).hide();
+        };
+
+        async function renderGastos() {
+            const gastos = await getGastos();
+            const entradas = gastos.filter(g => g.tipo === 'entrada').sort((a,b) => b.data.localeCompare(a.data));
+            const saidas = gastos.filter(g => g.tipo === 'saida').sort((a,b) => b.data.localeCompare(a.data));
+
+            let htmlEnt = '<ul class="list-group">';
+            entradas.slice(0,10).forEach(g => {
+                htmlEnt += `<li class="list-group-item d-flex justify-content-between align-items-center">
+                    ${g.data} - ${g.descricao} <span class="badge bg-success">R$ ${g.valor.toFixed(2)}</span>
+                </li>`;
+            });
+            htmlEnt += '</ul>';
+            document.getElementById('listaEntradas').innerHTML = htmlEnt;
+
+            let htmlSai = '<ul class="list-group">';
+            saidas.slice(0,10).forEach(g => {
+                htmlSai += `<li class="list-group-item d-flex justify-content-between align-items-center">
+                    ${g.data} - ${g.descricao} <span class="badge bg-danger">R$ ${g.valor.toFixed(2)}</span>
+                </li>`;
+            });
+            htmlSai += '</ul>';
+            document.getElementById('listaSaidas').innerHTML = htmlSai;
+        }
+
+        // ==================== RELATÓRIOS ====================
+        window.gerarRelatorio = async function() {
+            const inicio = document.getElementById('relInicio').value;
+            const fim = document.getElementById('relFim').value;
+            const filtroCliente = document.getElementById('relCliente').value.toLowerCase();
+            if (!inicio || !fim) return alert('Selecione o período.');
+
+            const vendas = await getVendas();
+            const clientes = await getClientes();
+
+            let filtradas = vendas.filter(v => v.data >= inicio && v.data <= fim);
+            if (filtroCliente) {
+                const idsClientes = clientes.filter(c => c.nome.toLowerCase().includes(filtroCliente)).map(c => c.id);
+                filtradas = filtradas.filter(v => idsClientes.includes(v.clienteId));
+            }
+
+            const totalVendas = filtradas.reduce((acc, v) => acc + v.total, 0);
+            const totalCusto = filtradas.reduce((acc, v) => acc + v.itens.reduce((sub, i) => sub + i.custo * i.quantidade, 0), 0);
+            const lucro = totalVendas - totalCusto;
+            const margem = totalVendas > 0 ? (lucro / totalVendas) * 100 : 0;
+
+            let html = `
+                <h5>Período: ${inicio} a ${fim}</h5>
+                <div class="row g-2 mb-3">
+                    <div class="col-md-3"><div class="card bg-light p-2"><h6>Total Vendas</h6><h5 class="text-success">R$ ${formatarMoeda(totalVendas)}</h5></div></div>
+                    <div class="col-md-3"><div class="card bg-light p-2"><h6>Custo Total</h6><h5 class="text-danger">R$ ${formatarMoeda(totalCusto)}</h5></div></div>
+                    <div class="col-md-3"><div class="card bg-light p-2"><h6>Lucro</h6><h5 class="text-primary">R$ ${formatarMoeda(lucro)}</h5></div></div>
+                    <div class="col-md-3"><div class="card bg-light p-2"><h6>Margem</h6><h5>${margem.toFixed(2).replace('.',',')}%</h5></div></div>
+                </div>
+                <table class="table table-sm">
+                    <thead><tr><th>Data</th><th>Cliente</th><th>Pagamento</th><th>Total</th><th>Itens</th></tr></thead>
+                    <tbody>
+            `;
+            filtradas.sort((a,b) => a.data.localeCompare(b.data));
+            for (let v of filtradas) {
+                const cliente = clientes.find(c => c.id === v.clienteId) || { nome: 'Desconhecido' };
+                html += `<tr>
+                    <td>${v.data}</td>
+                    <td>${cliente.nome}</td>
+                    <td>${v.formaPagamento}</td>
+                    <td>R$ ${v.total.toFixed(2)}</td>
+                    <td><button class="btn btn-sm btn-outline-success" onclick="verItensVenda('${v.id}')">Ver</button></td>
+                </tr>`;
+            }
+            html += '</tbody></table>';
+            document.getElementById('relatorioResultado').innerHTML = html;
+        };
+
+        window.verItensVenda = async function(vendaId) {
+            const vendas = await getVendas();
+            const v = vendas.find(v => v.id === vendaId);
+            if (!v) return;
+            let html = '<table class="table"><tr><th>Produto</th><th>Qtd</th><th>Preço</th><th>Subtotal</th></tr>';
+            v.itens.forEach(i => {
+                html += `<tr><td>${i.nome}</td><td>${i.quantidade}</td><td>R$ ${i.preco.toFixed(2)}</td><td>R$ ${i.subtotal.toFixed(2)}</td></tr>`;
+            });
+            html += '</table>';
+            document.getElementById('comprovanteBody').innerHTML = html;
+            new bootstrap.Modal(document.getElementById('modalComprovante')).show();
+        };
+
+        window.exportarPDF = async function() {
+            const inicio = document.getElementById('relInicio').value;
+            const fim = document.getElementById('relFim').value;
+            if (!inicio || !fim) return alert('Selecione o período.');
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            doc.setFontSize(18).setTextColor(46,204,113).text('MJ Soluções',14,20);
+            doc.setFontSize(12).setTextColor(0,0,0).text(`Relatório de Vendas ${inicio} a ${fim}`,14,30);
+
+            const vendas = await getVendas();
+            const clientes = await getClientes();
+            const filtradas = vendas.filter(v => v.data >= inicio && v.data <= fim);
+            const totalVendas = filtradas.reduce((acc, v) => acc + v.total, 0);
+            doc.setFontSize(10).text(`Total de Vendas: R$ ${totalVendas.toFixed(2)}`,14,40);
+
+            const body = filtradas.map(v => {
+                const cliente = clientes.find(c => c.id === v.clienteId) || { nome: 'Desconhecido' };
+                return [v.data, cliente.nome, v.formaPagamento, `R$ ${v.total.toFixed(2)}`];
+            });
+            doc.autoTable({
+                startY: 50,
+                head: [['Data','Cliente','Pagamento','Total']],
+                body: body,
+                headStyles: { fillColor: [46,204,113] }
+            });
+            doc.save(`relatorio_vendas_${inicio}_a_${fim}.pdf`);
+        };
+
+        window.exportarExcel = async function() {
+            const inicio = document.getElementById('relInicio').value;
+            const fim = document.getElementById('relFim').value;
+            if (!inicio || !fim) return alert('Selecione o período.');
+            const vendas = await getVendas();
+            const clientes = await getClientes();
+            const filtradas = vendas.filter(v => v.data >= inicio && v.data <= fim);
+            const dados = filtradas.map(v => {
+                const cliente = clientes.find(c => c.id === v.clienteId) || { nome: 'Desconhecido' };
+                return {
+                    Data: v.data,
+                    Cliente: cliente.nome,
+                    Pagamento: v.formaPagamento,
+                    Total: v.total
+                };
+            });
+            const ws = XLSX.utils.json_to_sheet(dados);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Vendas');
+            XLSX.writeFile(wb, `relatorio_vendas_${inicio}_a_${fim}.xlsx`);
+        };
+
+        // ==================== DASHBOARD ====================
+        async function carregarDashboard() {
+            const vendas = await getVendas();
+            const produtos = await getProdutos();
+            const hoje = new Date();
+            const mesAtual = hoje.toISOString().slice(0,7);
+
+            const vendasMes = vendas.filter(v => v.data.startsWith(mesAtual));
+            const totalVendasMes = vendasMes.reduce((acc, v) => acc + v.total, 0);
+            const totalCustoMes = vendasMes.reduce((acc, v) => acc + v.itens.reduce((sub, i) => sub + i.custo * i.quantidade, 0), 0);
+            const lucroMes = totalVendasMes - totalCustoMes;
+            const totalEstoqueItens = produtos.reduce((acc, p) => acc + p.estoque, 0);
+
+            document.getElementById('totalVendasMes').innerText = `R$ ${formatarMoeda(totalVendasMes)}`;
+            document.getElementById('totalCustoMes').innerText = `R$ ${formatarMoeda(totalCustoMes)}`;
+            document.getElementById('totalLucroMes').innerText = `R$ ${formatarMoeda(lucroMes)}`;
+            document.getElementById('totalEstoqueItens').innerText = totalEstoqueItens;
+
+            // Gráfico de linha (últimos 7 dias)
+            const ultimos7 = [];
+            for (let i = 6; i >= 0; i--) {
+                const d = new Date(hoje);
+                d.setDate(hoje.getDate() - i);
+                ultimos7.push(d.toISOString().split('T')[0]);
+            }
+            const valoresPorDia = ultimos7.map(dia => 
+                vendas.filter(v => v.data === dia).reduce((acc, v) => acc + v.total, 0)
+            );
+
+            if (window.graficoVendasLinha) window.graficoVendasLinha.destroy();
+            const ctxLinha = document.getElementById('graficoVendasLinha').getContext('2d');
+            window.graficoVendasLinha = new Chart(ctxLinha, {
+                type: 'line',
+                data: {
+                    labels: ultimos7.map(d => d.substring(5)),
+                    datasets: [{
+                        label: 'Vendas (R$)',
+                        data: valoresPorDia,
+                        borderColor: '#2ecc71',
+                        backgroundColor: 'rgba(46,204,113,0.1)',
+                        tension: 0.3,
+                        fill: true
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+
+            // Gráfico de pizza: produtos em estoque (top 5)
+            const topProdutos = produtos.sort((a,b) => b.estoque - a.estoque).slice(0,5);
+            const nomes = topProdutos.map(p => p.nome);
+            const quantidades = topProdutos.map(p => p.estoque);
+
+            if (window.graficoEstoquePizza) window.graficoEstoquePizza.destroy();
+            const ctxPizza = document.getElementById('graficoEstoquePizza').getContext('2d');
+            window.graficoEstoquePizza = new Chart(ctxPizza, {
+                type: 'pie',
+                data: {
+                    labels: nomes,
+                    datasets: [{
+                        data: quantidades,
+                        backgroundColor: ['#2ecc71', '#3498db', '#f1c40f', '#e74c3c', '#9b59b6']
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+        }
+
+        // ==================== INICIALIZAÇÃO ====================
+        (async function init() {
+            await carregarVenda();
+            await renderClientes();
+            await renderProdutos();
+            await renderGastos();
+            await carregarDashboard();
+
+            document.querySelectorAll('button[data-bs-toggle="tab"]').forEach(btn => {
+                btn.addEventListener('shown.bs.tab', async function(e) {
+                    if (e.target.id === 'venda-tab') await carregarVenda();
+                    if (e.target.id === 'clientes-tab') await renderClientes();
+                    if (e.target.id === 'produtos-tab') await renderProdutos();
+                    if (e.target.id === 'gastos-tab') await renderGastos();
+                    if (e.target.id === 'dashboard-tab') await carregarDashboard();
+                });
+            });
+        })();
+    </script>
+</body>
+</html>
