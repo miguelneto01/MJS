@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MJ Soluções - Sistema de Gestão</title>
+    <title>MJ SOLUÇÕES - SISTEMA DE GESTÃO</title>
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
@@ -33,6 +33,13 @@
         }
         * {
             font-family: 'Inter', sans-serif;
+        }
+        /* CAIXA ALTA em todo o sistema, exceto inputs */
+        body, .modal, .card, .navbar, .footer, .btn, th, td, label, h1, h2, h3, h4, h5, h6, span, div {
+            text-transform: uppercase;
+        }
+        input, textarea, select, .form-control, .form-select {
+            text-transform: none !important; /* mantém o texto digitado normal */
         }
         body {
             background-color: var(--light-gray);
@@ -189,22 +196,26 @@
             backdrop-filter: blur(20px);
             border: 1px solid rgba(255,255,255,0.5);
         }
+        /* Ajustes para inputs dentro de caixa alta */
+        .form-control, .form-select {
+            text-transform: none;
+        }
     </style>
 </head>
 <body>
     <!-- Tela de Login -->
     <div id="loginContainer" class="login-container">
         <div class="card glass-effect p-5">
-            <h3 class="text-center mb-4" style="color: var(--primary-green); font-weight: 700;">MJ Soluções</h3>
+            <h3 class="text-center mb-4" style="color: var(--primary-green); font-weight: 700;">MJ SOLUÇÕES</h3>
             <div class="mb-4">
-                <label class="form-label text-muted">Usuário</label>
+                <label class="form-label text-muted">USUÁRIO</label>
                 <input type="text" id="loginUser" class="form-control form-control-lg rounded-pill" placeholder=" ">
             </div>
             <div class="mb-4">
-                <label class="form-label text-muted">Senha</label>
+                <label class="form-label text-muted">SENHA</label>
                 <input type="password" id="loginPass" class="form-control form-control-lg rounded-pill" placeholder=" ">
             </div>
-            <button class="btn btn-success w-100 py-3 rounded-pill" onclick="fazerLogin()">Entrar</button>
+            <button class="btn btn-success w-100 py-3 rounded-pill" onclick="fazerLogin()">ENTRAR</button>
             <div id="loginError" class="text-danger mt-3 text-center"></div>
         </div>
     </div>
@@ -225,10 +236,10 @@
         <div class="container mt-4">
             <div class="empresa-header">
                 <div class="row align-items-center">
-                    <div class="col-md-3"><i class="bi bi-building me-2" style="color: var(--primary-green);"></i> <strong>MJ Soluções</strong></div>
-                    <div class="col-md-3"><i class="bi bi-envelope me-2" style="color: var(--primary-blue);"></i> miguelnetomkt@gmail.com</div>
+                    <div class="col-md-3"><i class="bi bi-building me-2" style="color: var(--primary-green);"></i> <strong>MJ SOLUÇÕES</strong></div>
+                    <div class="col-md-3"><i class="bi bi-envelope me-2" style="color: var(--primary-blue);"></i> MIGUELNETOMKT@GMAIL.COM</div>
                     <div class="col-md-3"><i class="bi bi-whatsapp me-2" style="color: #25D366;"></i> <a href="https://w.app/t5dzhj" target="_blank" class="text-decoration-none">(85) 9 9815-5652</a></div>
-                    <div class="col-md-3"><i class="bi bi-geo-alt me-2" style="color: var(--accent-orange);"></i> R. Francisco Lucas de Melo - Aracoiaba</div>
+                    <div class="col-md-3"><i class="bi bi-geo-alt me-2" style="color: var(--accent-orange);"></i> R. FRANCISCO LUCAS DE MELO - ARACOIABA</div>
                 </div>
             </div>
         </div>
@@ -237,77 +248,77 @@
         <div class="container mt-3">
             <!-- Abas -->
             <ul class="nav nav-tabs" id="myTab" role="tablist">
-                <li class="nav-item"><button class="nav-link active" id="venda-tab" data-bs-toggle="tab" data-bs-target="#venda"><i class="bi bi-cart-plus me-2"></i>Venda</button></li>
-                <li class="nav-item"><button class="nav-link" id="clientes-tab" data-bs-toggle="tab" data-bs-target="#clientes"><i class="bi bi-people me-2"></i>Clientes</button></li>
-                <li class="nav-item"><button class="nav-link" id="produtos-tab" data-bs-toggle="tab" data-bs-target="#produtos"><i class="bi bi-boxes me-2"></i>Produtos</button></li>
-                <li class="nav-item"><button class="nav-link" id="credito-tab" data-bs-toggle="tab" data-bs-target="#credito"><i class="bi bi-credit-card me-2"></i>Crédito</button></li>
-                <li class="nav-item"><button class="nav-link" id="gastos-tab" data-bs-toggle="tab" data-bs-target="#gastos"><i class="bi bi-cash-stack me-2"></i>Gastos</button></li>
-                <li class="nav-item"><button class="nav-link" id="relatorios-tab" data-bs-toggle="tab" data-bs-target="#relatorios"><i class="bi bi-file-text me-2"></i>Relatórios</button></li>
-                <li class="nav-item"><button class="nav-link" id="dashboard-tab" data-bs-toggle="tab" data-bs-target="#dashboard"><i class="bi bi-bar-chart-line me-2"></i>Dashboard</button></li>
+                <li class="nav-item"><button class="nav-link active" id="venda-tab" data-bs-toggle="tab" data-bs-target="#venda"><i class="bi bi-cart-plus me-2"></i>VENDA</button></li>
+                <li class="nav-item"><button class="nav-link" id="clientes-tab" data-bs-toggle="tab" data-bs-target="#clientes"><i class="bi bi-people me-2"></i>CLIENTES</button></li>
+                <li class="nav-item"><button class="nav-link" id="produtos-tab" data-bs-toggle="tab" data-bs-target="#produtos"><i class="bi bi-boxes me-2"></i>PRODUTOS</button></li>
+                <li class="nav-item"><button class="nav-link" id="credito-tab" data-bs-toggle="tab" data-bs-target="#credito"><i class="bi bi-credit-card me-2"></i>CRÉDITO</button></li>
+                <li class="nav-item"><button class="nav-link" id="gastos-tab" data-bs-toggle="tab" data-bs-target="#gastos"><i class="bi bi-cash-stack me-2"></i>GASTOS</button></li>
+                <li class="nav-item"><button class="nav-link" id="relatorios-tab" data-bs-toggle="tab" data-bs-target="#relatorios"><i class="bi bi-file-text me-2"></i>RELATÓRIOS</button></li>
+                <li class="nav-item"><button class="nav-link" id="dashboard-tab" data-bs-toggle="tab" data-bs-target="#dashboard"><i class="bi bi-bar-chart-line me-2"></i>DASHBOARD</button></li>
             </ul>
 
             <!-- Conteúdo das abas -->
             <div class="tab-content p-4 border-0 bg-white rounded-4 shadow-sm mt-3" id="myTabContent">
                 <!-- ABA VENDA -->
                 <div class="tab-pane fade show active" id="venda">
-                    <h4 class="mb-4" style="color: var(--primary-green); font-weight: 600;"><i class="bi bi-cart-plus me-2"></i>Nova Venda</h4>
+                    <h4 class="mb-4" style="color: var(--primary-green); font-weight: 600;"><i class="bi bi-cart-plus me-2"></i>NOVA VENDA</h4>
                     <div class="row g-4">
                         <div class="col-md-5">
                             <div class="card p-4">
-                                <h5 class="mb-3"><i class="bi bi-person me-2" style="color: var(--primary-blue);"></i>Cliente</h5>
-                                <input type="text" id="buscaClienteVenda" class="form-control rounded-pill mb-2" placeholder="Digite o nome do cliente..." onkeyup="buscarClientesVenda()">
+                                <h5 class="mb-3"><i class="bi bi-person me-2" style="color: var(--primary-blue);"></i>CLIENTE</h5>
+                                <input type="text" id="buscaClienteVenda" class="form-control rounded-pill mb-2" placeholder="DIGITE O NOME DO CLIENTE..." onkeyup="buscarClientesVenda()">
                                 <div id="listaClientesVenda" class="produto-lista mb-2"></div>
                                 <input type="hidden" id="clienteIdVenda">
                                 <div id="novoClienteVenda" style="display: none;">
                                     <hr>
-                                    <h6 class="fw-bold">Cadastrar novo cliente</h6>
-                                    <input type="text" id="novoClienteNome" class="form-control rounded-pill mb-2" placeholder="Nome">
-                                    <input type="text" id="novoClienteEndereco" class="form-control rounded-pill mb-2" placeholder="Endereço">
-                                    <input type="text" id="novoClienteCidade" class="form-control rounded-pill mb-2" placeholder="Cidade">
-                                    <input type="text" id="novoClienteEstado" class="form-control rounded-pill mb-2" placeholder="Estado">
+                                    <h6 class="fw-bold">CADASTRAR NOVO CLIENTE</h6>
+                                    <input type="text" id="novoClienteNome" class="form-control rounded-pill mb-2" placeholder="NOME">
+                                    <input type="text" id="novoClienteEndereco" class="form-control rounded-pill mb-2" placeholder="ENDEREÇO">
+                                    <input type="text" id="novoClienteCidade" class="form-control rounded-pill mb-2" placeholder="CIDADE">
+                                    <input type="text" id="novoClienteEstado" class="form-control rounded-pill mb-2" placeholder="ESTADO">
                                     <input type="text" id="novoClienteCep" class="form-control rounded-pill mb-2" placeholder="CEP">
-                                    <input type="email" id="novoClienteEmail" class="form-control rounded-pill mb-2" placeholder="E-mail">
-                                    <input type="text" id="novoClienteTelefone" class="form-control rounded-pill mb-2" placeholder="Telefone">
+                                    <input type="email" id="novoClienteEmail" class="form-control rounded-pill mb-2" placeholder="E-MAIL">
+                                    <input type="text" id="novoClienteTelefone" class="form-control rounded-pill mb-2" placeholder="TELEFONE">
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-7">
                             <div class="card p-4">
-                                <h5 class="mb-3"><i class="bi bi-search me-2" style="color: var(--primary-blue);"></i>Buscar Produtos</h5>
-                                <input type="text" id="buscaProduto" class="form-control rounded-pill" placeholder="Digite o nome do produto..." onkeyup="filtrarProdutosVenda()">
+                                <h5 class="mb-3"><i class="bi bi-search me-2" style="color: var(--primary-blue);"></i>BUSCAR PRODUTOS</h5>
+                                <input type="text" id="buscaProduto" class="form-control rounded-pill" placeholder="DIGITE O NOME DO PRODUTO..." onkeyup="filtrarProdutosVenda()">
                                 <div id="listaProdutosVenda" class="produto-lista mt-3"></div>
                             </div>
                             <div class="card p-4 mt-4">
-                                <h5 class="mb-3"><i class="bi bi-cart-check me-2" style="color: var(--primary-blue);"></i>Itens da Venda</h5>
+                                <h5 class="mb-3"><i class="bi bi-cart-check me-2" style="color: var(--primary-blue);"></i>ITENS DA VENDA</h5>
                                 <div id="itensVendaContainer"></div>
                                 <hr class="my-3">
                                 <div class="row g-3 align-items-center">
                                     <div class="col-md-3">
                                         <select id="formaPagamento" class="form-select rounded-pill" onchange="toggleFormaPagamento()">
-                                            <option value="dinheiro">Dinheiro</option>
-                                            <option value="cartao">Cartão</option>
+                                            <option value="dinheiro">DINHEIRO</option>
+                                            <option value="cartao">CARTÃO</option>
                                             <option value="pix">PIX</option>
-                                            <option value="credito">Crédito da Loja</option>
+                                            <option value="credito">CRÉDITO DA LOJA</option>
                                         </select>
                                     </div>
                                     <div class="col-md-3" id="trocoArea">
-                                        <input type="number" id="valorRecebido" class="form-control rounded-pill" step="0.01" min="0" placeholder="Valor recebido" oninput="calcularTroco()">
-                                        <small class="text-muted">Troco: R$ <span id="trocoValor">0,00</span></small>
+                                        <input type="number" id="valorRecebido" class="form-control rounded-pill" step="0.01" min="0" placeholder="VALOR RECEBIDO" oninput="calcularTroco()">
+                                        <small class="text-muted">TROCO: R$ <span id="trocoValor">0,00</span></small>
                                     </div>
                                     <div class="col-md-3" id="creditoArea" style="display: none;">
-                                        <input type="number" id="entradaCredito" class="form-control rounded-pill mb-1" step="0.01" min="0" placeholder="Entrada (opcional)">
+                                        <input type="number" id="entradaCredito" class="form-control rounded-pill mb-1" step="0.01" min="0" placeholder="ENTRADA (OPCIONAL)">
                                         <select id="parcelasCredito" class="form-select rounded-pill">
-                                            <option value="1">1x sem juros</option>
-                                            <option value="2">2x sem juros</option>
-                                            <option value="3">3x sem juros</option>
-                                            <option value="4">4x sem juros</option>
-                                            <option value="5">5x sem juros</option>
-                                            <option value="6">6x sem juros</option>
+                                            <option value="1">1X SEM JUROS</option>
+                                            <option value="2">2X SEM JUROS</option>
+                                            <option value="3">3X SEM JUROS</option>
+                                            <option value="4">4X SEM JUROS</option>
+                                            <option value="5">5X SEM JUROS</option>
+                                            <option value="6">6X SEM JUROS</option>
                                         </select>
                                     </div>
                                     <div class="col-md-3 text-end">
                                         <h4 class="d-inline me-3 fw-bold" style="color: var(--primary-green);">R$ <span id="totalVenda">0,00</span></h4>
-                                        <button class="btn btn-success rounded-pill px-4 py-2" onclick="finalizarVenda()"><i class="bi bi-check-lg"></i> Finalizar</button>
+                                        <button class="btn btn-success rounded-pill px-4 py-2" onclick="finalizarVenda()"><i class="bi bi-check-lg"></i> FINALIZAR</button>
                                     </div>
                                 </div>
                                 <div id="vendaMsg" class="mt-3"></div>
@@ -318,17 +329,17 @@
 
                 <!-- ABA CLIENTES -->
                 <div class="tab-pane fade" id="clientes">
-                    <h4 class="mb-4" style="color: var(--primary-green); font-weight: 600;"><i class="bi bi-people me-2"></i>Clientes</h4>
+                    <h4 class="mb-4" style="color: var(--primary-green); font-weight: 600;"><i class="bi bi-people me-2"></i>CLIENTES</h4>
                     <div class="d-flex justify-content-between mb-4">
                         <button class="btn btn-success rounded-pill px-4 py-2" data-bs-toggle="modal" data-bs-target="#modalCliente" onclick="limparModalCliente()" id="btnNovoCliente">
-                            <i class="bi bi-plus-circle me-2"></i>Novo Cliente
+                            <i class="bi bi-plus-circle me-2"></i>NOVO CLIENTE
                         </button>
-                        <input type="text" id="buscaClientes" class="form-control search-box w-25" placeholder="Buscar cliente..." onkeyup="filtrarClientes()">
+                        <input type="text" id="buscaClientes" class="form-control search-box w-25" placeholder="BUSCAR CLIENTE..." onkeyup="filtrarClientes()">
                     </div>
                     <div class="table-responsive">
                         <table class="table table-hover align-middle" id="tabelaClientes">
                             <thead>
-                                <tr><th>ID</th><th>Nome</th><th>Endereço</th><th>Telefone</th><th>Email</th><th>Ações</th></tr>
+                                <tr><th>ID</th><th>NOME</th><th>ENDEREÇO</th><th>TELEFONE</th><th>EMAIL</th><th>AÇÕES</th></tr>
                             </thead>
                             <tbody></tbody>
                         </table>
@@ -337,17 +348,17 @@
 
                 <!-- ABA PRODUTOS -->
                 <div class="tab-pane fade" id="produtos">
-                    <h4 class="mb-4" style="color: var(--primary-green); font-weight: 600;"><i class="bi bi-boxes me-2"></i>Produtos</h4>
+                    <h4 class="mb-4" style="color: var(--primary-green); font-weight: 600;"><i class="bi bi-boxes me-2"></i>PRODUTOS</h4>
                     <div class="d-flex justify-content-between mb-4">
                         <button class="btn btn-success rounded-pill px-4 py-2" data-bs-toggle="modal" data-bs-target="#modalProduto" onclick="limparModalProduto()" id="btnNovoProduto">
-                            <i class="bi bi-plus-circle me-2"></i>Novo Produto
+                            <i class="bi bi-plus-circle me-2"></i>NOVO PRODUTO
                         </button>
-                        <input type="text" id="buscaProdutos" class="form-control search-box w-25" placeholder="Buscar produto..." onkeyup="filtrarProdutos()">
+                        <input type="text" id="buscaProdutos" class="form-control search-box w-25" placeholder="BUSCAR PRODUTO..." onkeyup="filtrarProdutos()">
                     </div>
                     <div class="table-responsive">
                         <table class="table table-hover align-middle" id="tabelaProdutos">
                             <thead>
-                                <tr><th>ID</th><th>Nome</th><th>Custo</th><th>Preço</th><th>Estoque</th><th>Margem</th><th>Ações</th></tr>
+                                <tr><th>ID</th><th>NOME</th><th>CUSTO</th><th>PREÇO</th><th>ESTOQUE</th><th>MARGEM</th><th>AÇÕES</th></tr>
                             </thead>
                             <tbody></tbody>
                         </table>
@@ -356,28 +367,28 @@
 
                 <!-- ABA CRÉDITO DA LOJA -->
                 <div class="tab-pane fade" id="credito">
-                    <h4 class="mb-4" style="color: var(--primary-green); font-weight: 600;"><i class="bi bi-credit-card me-2"></i>Crédito da Loja (Fiado)</h4>
+                    <h4 class="mb-4" style="color: var(--primary-green); font-weight: 600;"><i class="bi bi-credit-card me-2"></i>CRÉDITO DA LOJA (FIADO)</h4>
                     <div class="row g-4 mb-4">
                         <div class="col-md-6">
                             <div class="stat-card">
-                                <h6 class="text-muted">Total a Receber</h6>
+                                <h6 class="text-muted">TOTAL A RECEBER</h6>
                                 <h2 class="fw-bold" style="color: var(--accent-orange);">R$ <span id="totalCredito">0,00</span></h2>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="stat-card">
-                                <h6 class="text-muted">Clientes com Débito</h6>
+                                <h6 class="text-muted">CLIENTES COM DÉBITO</h6>
                                 <h2 class="fw-bold" style="color: var(--primary-blue);"><span id="totalClientesDebito">0</span></h2>
                             </div>
                         </div>
                     </div>
                     <div class="mb-4">
-                        <input type="text" id="buscaCredito" class="form-control search-box w-50" placeholder="Buscar cliente..." onkeyup="filtrarCreditos()">
+                        <input type="text" id="buscaCredito" class="form-control search-box w-50" placeholder="BUSCAR CLIENTE..." onkeyup="filtrarCreditos()">
                     </div>
                     <div class="table-responsive">
                         <table class="table table-hover align-middle" id="tabelaCredito">
                             <thead>
-                                <tr><th>Cliente</th><th>Total</th><th>Entrada</th><th>Parcelas</th><th>Valor Parcela</th><th>Parcelas Pagas</th><th>Saldo</th><th>Status</th><th>Ações</th></tr>
+                                <tr><th>CLIENTE</th><th>TOTAL</th><th>ENTRADA</th><th>PARCELAS</th><th>VALOR PARCELA</th><th>PARCELAS PAGAS</th><th>SALDO</th><th>STATUS</th><th>AÇÕES</th></tr>
                             </thead>
                             <tbody></tbody>
                         </table>
@@ -386,22 +397,22 @@
 
                 <!-- ABA GASTOS -->
                 <div class="tab-pane fade" id="gastos">
-                    <h4 class="mb-4" style="color: var(--primary-green); font-weight: 600;"><i class="bi bi-cash-stack me-2"></i>Controle de Gastos</h4>
+                    <h4 class="mb-4" style="color: var(--primary-green); font-weight: 600;"><i class="bi bi-cash-stack me-2"></i>CONTROLE DE GASTOS</h4>
                     <div class="row g-4">
                         <div class="col-md-6">
                             <div class="card p-4">
-                                <h5 class="text-success mb-3"><i class="bi bi-arrow-down-circle me-2"></i>Entradas</h5>
+                                <h5 class="text-success mb-3"><i class="bi bi-arrow-down-circle me-2"></i>ENTRADAS</h5>
                                 <button class="btn btn-outline-success rounded-pill mb-3 w-100" data-bs-toggle="modal" data-bs-target="#modalGasto" onclick="limparModalGasto('entrada')" id="btnNovaEntrada">
-                                    <i class="bi bi-plus me-2"></i>Nova Entrada
+                                    <i class="bi bi-plus me-2"></i>NOVA ENTRADA
                                 </button>
                                 <div id="listaEntradas"></div>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="card p-4">
-                                <h5 class="text-danger mb-3"><i class="bi bi-arrow-up-circle me-2"></i>Saídas</h5>
+                                <h5 class="text-danger mb-3"><i class="bi bi-arrow-up-circle me-2"></i>SAÍDAS</h5>
                                 <button class="btn btn-outline-danger rounded-pill mb-3 w-100" data-bs-toggle="modal" data-bs-target="#modalGasto" onclick="limparModalGasto('saida')" id="btnNovaSaida">
-                                    <i class="bi bi-plus me-2"></i>Nova Saída
+                                    <i class="bi bi-plus me-2"></i>NOVA SAÍDA
                                 </button>
                                 <div id="listaSaidas"></div>
                             </div>
@@ -411,61 +422,64 @@
 
                 <!-- ABA RELATÓRIOS -->
                 <div class="tab-pane fade" id="relatorios">
-                    <h4 class="mb-4" style="color: var(--primary-green); font-weight: 600;"><i class="bi bi-file-text me-2"></i>Relatórios</h4>
+                    <h4 class="mb-4" style="color: var(--primary-green); font-weight: 600;"><i class="bi bi-file-text me-2"></i>RELATÓRIOS</h4>
                     <div class="row g-3">
                         <div class="col-md-2">
-                            <label class="fw-semibold">Tipo</label>
+                            <label class="fw-semibold">TIPO</label>
                             <select id="relTipo" class="form-select rounded-pill">
-                                <option value="vendas">Vendas</option>
-                                <option value="estoque">Estoque</option>
-                                <option value="entradas">Entradas</option>
-                                <option value="saidas">Saídas</option>
-                                <option value="credito">Crédito (Fiado)</option>
+                                <option value="vendas">VENDAS</option>
+                                <option value="estoque">ESTOQUE</option>
+                                <option value="entradas">ENTRADAS</option>
+                                <option value="saidas">SAÍDAS</option>
+                                <option value="credito">CRÉDITO (FIADO)</option>
                             </select>
                         </div>
                         <div class="col-md-3">
-                            <label class="fw-semibold">Data Início</label>
+                            <label class="fw-semibold">DATA INÍCIO</label>
                             <input type="date" id="relInicio" class="form-control rounded-pill">
                         </div>
                         <div class="col-md-3">
-                            <label class="fw-semibold">Data Fim</label>
+                            <label class="fw-semibold">DATA FIM</label>
                             <input type="date" id="relFim" class="form-control rounded-pill">
                         </div>
                         <div class="col-md-4 d-flex align-items-end gap-2">
-                            <button class="btn btn-success rounded-pill px-4 py-2" onclick="gerarRelatorio()"><i class="bi bi-search me-2"></i>Gerar</button>
+                            <button class="btn btn-success rounded-pill px-4 py-2" onclick="gerarRelatorio()"><i class="bi bi-search me-2"></i>GERAR</button>
                             <button class="btn btn-primary rounded-pill px-4 py-2" onclick="exportarPDF()"><i class="bi bi-file-pdf me-2"></i>PDF</button>
-                            <button class="btn btn-success rounded-pill px-4 py-2" onclick="exportarExcel()"><i class="bi bi-file-excel me-2"></i>Excel</button>
+                            <button class="btn btn-success rounded-pill px-4 py-2" onclick="exportarExcel()"><i class="bi bi-file-excel me-2"></i>EXCEL</button>
                         </div>
                     </div>
                     <hr class="my-4">
+                    <div class="d-flex justify-content-end mb-3">
+                        <button class="btn btn-warning rounded-pill px-4 py-2" onclick="fecharMes()"><i class="bi bi-calendar-check me-2"></i>FECHAR MÊS (GERAR PDF E LIMPAR)</button>
+                    </div>
                     <div id="relatorioResultado" class="mt-3"></div>
                 </div>
 
                 <!-- ABA DASHBOARD -->
                 <div class="tab-pane fade" id="dashboard">
-                    <h4 class="mb-4" style="color: var(--primary-green); font-weight: 600;"><i class="bi bi-bar-chart-line me-2"></i>Dashboard</h4>
+                    <h4 class="mb-4" style="color: var(--primary-green); font-weight: 600;"><i class="bi bi-bar-chart-line me-2"></i>DASHBOARD</h4>
                     <div class="row g-4">
                         <div class="col-md-3">
                             <div class="stat-card">
-                                <h6 class="text-muted">Vendas (mês)</h6>
+                                <h6 class="text-muted">VENDAS (MÊS)</h6>
                                 <h3 class="fw-bold" style="color: var(--primary-green);">R$ <span id="totalVendasMes">0,00</span></h3>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="stat-card">
-                                <h6 class="text-muted">Custo (mês)</h6>
+                                <h6 class="text-muted">CUSTO (MÊS)</h6>
                                 <h3 class="fw-bold text-danger">R$ <span id="totalCustoMes">0,00</span></h3>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="stat-card">
-                                <h6 class="text-muted">Lucro (mês)</h6>
+                                <h6 class="text-muted">LUCRO (MÊS)</h6>
                                 <h3 class="fw-bold" style="color: var(--primary-blue);">R$ <span id="totalLucroMes">0,00</span></h3>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="stat-card">
-                                <h6 class="text-muted">Estoque (itens)</h6>
+                                <h6 class="text-muted">ESTOQUE (ITENS)</h6>
                                 <h3 class="fw-bold" style="color: var(--primary-green);"><span id="totalEstoqueItens">0</span></h3>
                             </div>
                         </div>
@@ -473,7 +487,7 @@
                     <div class="row mt-5 g-4">
                         <div class="col-md-6">
                             <div class="card p-4">
-                                <h5 class="text-center mb-4">Vendas por Dia (últimos 7 dias)</h5>
+                                <h5 class="text-center mb-4">VENDAS POR DIA (ÚLTIMOS 7 DIAS)</h5>
                                 <div class="chart-container">
                                     <canvas id="graficoVendasLinha"></canvas>
                                 </div>
@@ -481,7 +495,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="card p-4">
-                                <h5 class="text-center mb-4">Produtos Mais Vendidos (Quantidade)</h5>
+                                <h5 class="text-center mb-4">PRODUTOS MAIS VENDIDOS (QUANTIDADE)</h5>
                                 <div class="chart-container">
                                     <canvas id="graficoRanking"></canvas>
                                 </div>
@@ -498,24 +512,24 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content rounded-4">
                     <div class="modal-header bg-light border-0">
-                        <h5 class="modal-title" id="modalClienteTitle">Novo Cliente</h5>
+                        <h5 class="modal-title" id="modalClienteTitle">NOVO CLIENTE</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
                         <input type="hidden" id="clienteId">
                         <div class="row">
-                            <div class="col-md-6 mb-3"><label class="fw-semibold">Nome *</label><input type="text" id="modalClienteNome" class="form-control rounded-pill"></div>
-                            <div class="col-md-6 mb-3"><label class="fw-semibold">Endereço</label><input type="text" id="modalClienteEndereco" class="form-control rounded-pill"></div>
-                            <div class="col-md-4 mb-3"><label class="fw-semibold">Cidade</label><input type="text" id="modalClienteCidade" class="form-control rounded-pill"></div>
-                            <div class="col-md-4 mb-3"><label class="fw-semibold">Estado</label><input type="text" id="modalClienteEstado" class="form-control rounded-pill"></div>
+                            <div class="col-md-6 mb-3"><label class="fw-semibold">NOME *</label><input type="text" id="modalClienteNome" class="form-control rounded-pill"></div>
+                            <div class="col-md-6 mb-3"><label class="fw-semibold">ENDEREÇO</label><input type="text" id="modalClienteEndereco" class="form-control rounded-pill"></div>
+                            <div class="col-md-4 mb-3"><label class="fw-semibold">CIDADE</label><input type="text" id="modalClienteCidade" class="form-control rounded-pill"></div>
+                            <div class="col-md-4 mb-3"><label class="fw-semibold">ESTADO</label><input type="text" id="modalClienteEstado" class="form-control rounded-pill"></div>
                             <div class="col-md-4 mb-3"><label class="fw-semibold">CEP</label><input type="text" id="modalClienteCep" class="form-control rounded-pill"></div>
-                            <div class="col-md-6 mb-3"><label class="fw-semibold">Email</label><input type="email" id="modalClienteEmail" class="form-control rounded-pill"></div>
-                            <div class="col-md-6 mb-3"><label class="fw-semibold">Telefone</label><input type="text" id="modalClienteTelefone" class="form-control rounded-pill"></div>
+                            <div class="col-md-6 mb-3"><label class="fw-semibold">EMAIL</label><input type="email" id="modalClienteEmail" class="form-control rounded-pill"></div>
+                            <div class="col-md-6 mb-3"><label class="fw-semibold">TELEFONE</label><input type="text" id="modalClienteTelefone" class="form-control rounded-pill"></div>
                         </div>
                     </div>
                     <div class="modal-footer border-0">
-                        <button class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Cancelar</button>
-                        <button class="btn btn-success rounded-pill px-4" onclick="salvarCliente()">Salvar</button>
+                        <button class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">CANCELAR</button>
+                        <button class="btn btn-success rounded-pill px-4" onclick="salvarCliente()">SALVAR</button>
                     </div>
                 </div>
             </div>
@@ -526,19 +540,19 @@
             <div class="modal-dialog">
                 <div class="modal-content rounded-4">
                     <div class="modal-header bg-light border-0">
-                        <h5 class="modal-title" id="modalProdutoTitle">Novo Produto</h5>
+                        <h5 class="modal-title" id="modalProdutoTitle">NOVO PRODUTO</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
                         <input type="hidden" id="produtoId">
-                        <div class="mb-3"><label class="fw-semibold">Nome</label><input type="text" id="modalProdutoNome" class="form-control rounded-pill"></div>
-                        <div class="mb-3"><label class="fw-semibold">Custo (R$)</label><input type="number" step="0.01" id="modalProdutoCusto" class="form-control rounded-pill"></div>
-                        <div class="mb-3"><label class="fw-semibold">Preço (R$)</label><input type="number" step="0.01" id="modalProdutoPreco" class="form-control rounded-pill"></div>
-                        <div class="mb-3"><label class="fw-semibold">Estoque Inicial</label><input type="number" id="modalProdutoEstoque" class="form-control rounded-pill"></div>
+                        <div class="mb-3"><label class="fw-semibold">NOME</label><input type="text" id="modalProdutoNome" class="form-control rounded-pill"></div>
+                        <div class="mb-3"><label class="fw-semibold">CUSTO (R$)</label><input type="number" step="0.01" id="modalProdutoCusto" class="form-control rounded-pill"></div>
+                        <div class="mb-3"><label class="fw-semibold">PREÇO (R$)</label><input type="number" step="0.01" id="modalProdutoPreco" class="form-control rounded-pill"></div>
+                        <div class="mb-3"><label class="fw-semibold">ESTOQUE INICIAL</label><input type="number" id="modalProdutoEstoque" class="form-control rounded-pill"></div>
                     </div>
                     <div class="modal-footer border-0">
-                        <button class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Cancelar</button>
-                        <button class="btn btn-success rounded-pill px-4" onclick="salvarProduto()">Salvar</button>
+                        <button class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">CANCELAR</button>
+                        <button class="btn btn-success rounded-pill px-4" onclick="salvarProduto()">SALVAR</button>
                     </div>
                 </div>
             </div>
@@ -549,19 +563,58 @@
             <div class="modal-dialog">
                 <div class="modal-content rounded-4">
                     <div class="modal-header bg-light border-0">
-                        <h5 class="modal-title" id="modalGastoTitle">Novo Gasto</h5>
+                        <h5 class="modal-title" id="modalGastoTitle">NOVO GASTO</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
                         <input type="hidden" id="gastoId">
                         <input type="hidden" id="gastoTipo" value="entrada">
-                        <div class="mb-3"><label class="fw-semibold">Data</label><input type="date" id="gastoData" class="form-control rounded-pill"></div>
-                        <div class="mb-3"><label class="fw-semibold">Descrição</label><input type="text" id="gastoDescricao" class="form-control rounded-pill"></div>
-                        <div class="mb-3"><label class="fw-semibold">Valor (R$)</label><input type="number" step="0.01" id="gastoValor" class="form-control rounded-pill"></div>
+                        <div class="mb-3"><label class="fw-semibold">DATA</label><input type="date" id="gastoData" class="form-control rounded-pill"></div>
+                        <div class="mb-3"><label class="fw-semibold">DESCRIÇÃO</label><input type="text" id="gastoDescricao" class="form-control rounded-pill"></div>
+                        <div class="mb-3"><label class="fw-semibold">VALOR (R$)</label><input type="number" step="0.01" id="gastoValor" class="form-control rounded-pill"></div>
                     </div>
                     <div class="modal-footer border-0">
-                        <button class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Cancelar</button>
-                        <button class="btn btn-success rounded-pill px-4" onclick="salvarGasto()">Salvar</button>
+                        <button class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">CANCELAR</button>
+                        <button class="btn btn-success rounded-pill px-4" onclick="salvarGasto()">SALVAR</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Negociar Crédito -->
+        <div class="modal fade" id="modalNegociarCredito" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content rounded-4">
+                    <div class="modal-header bg-warning text-white border-0">
+                        <h5 class="modal-title"><i class="bi bi-cash-coin me-2"></i>NEGOCIAR CRÉDITO</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" id="negociarCreditoId">
+                        <p>CLIENTE: <strong id="negociarClienteNome"></strong></p>
+                        <p>SALDO ATUAL: R$ <span id="negociarSaldoAtual"></span></p>
+                        <hr>
+                        <div class="mb-3">
+                            <label class="fw-semibold">VALOR A PAGAR (OPCIONAL)</label>
+                            <input type="number" id="negociarValorPago" class="form-control rounded-pill" step="0.01" min="0">
+                        </div>
+                        <div class="mb-3">
+                            <label class="fw-semibold">NOVO NÚMERO DE PARCELAS (OPCIONAL)</label>
+                            <select id="negociarNovasParcelas" class="form-select rounded-pill">
+                                <option value="">SEM ALTERAÇÃO</option>
+                                <option value="1">1X</option>
+                                <option value="2">2X</option>
+                                <option value="3">3X</option>
+                                <option value="4">4X</option>
+                                <option value="5">5X</option>
+                                <option value="6">6X</option>
+                            </select>
+                        </div>
+                        <small class="text-muted">SE INFORMAR VALOR, ELE SERÁ ABATIDO DO SALDO. SE INFORMAR PARCELAS, O RESTANTE SERÁ DIVIDIDO.</small>
+                    </div>
+                    <div class="modal-footer border-0">
+                        <button class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">CANCELAR</button>
+                        <button class="btn btn-success rounded-pill px-4" onclick="confirmarNegociacao()">CONFIRMAR</button>
                     </div>
                 </div>
             </div>
@@ -572,13 +625,13 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content rounded-4">
                     <div class="modal-header bg-success text-white border-0">
-                        <h5 class="modal-title"><i class="bi bi-receipt me-2"></i>Comprovante de Venda</h5>
+                        <h5 class="modal-title"><i class="bi bi-receipt me-2"></i>COMPROVANTE DE VENDA</h5>
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body" id="comprovanteBody"></div>
                     <div class="modal-footer border-0">
-                        <button class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Fechar</button>
-                        <button class="btn btn-primary rounded-pill px-4" onclick="imprimirComprovante()"><i class="bi bi-printer me-2"></i>Imprimir</button>
+                        <button class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">FECHAR</button>
+                        <button class="btn btn-primary rounded-pill px-4" onclick="imprimirComprovante()"><i class="bi bi-printer me-2"></i>IMPRIMIR</button>
                     </div>
                 </div>
             </div>
@@ -587,7 +640,7 @@
         <!-- Rodapé -->
         <footer class="footer text-center">
             <div class="container">
-                <span class="opacity-75">MJ Soluções - Sistema de Gestão v5.0</span>
+                <span class="opacity-75">MJ SOLUÇÕES - SISTEMA DE GESTÃO V6.0</span>
             </div>
         </footer>
     </div>
@@ -618,16 +671,16 @@
                 usuarioLogado = { tipo: 'admin' };
                 document.getElementById('loginContainer').style.display = 'none';
                 document.getElementById('mainSystem').style.display = 'block';
-                document.getElementById('userInfo').innerText = 'Admin';
+                document.getElementById('userInfo').innerText = 'ADMIN';
                 iniciarSistema();
             } else if (user === 'meuacesso' && pass === '102050') {
                 usuarioLogado = { tipo: 'user' };
                 document.getElementById('loginContainer').style.display = 'none';
                 document.getElementById('mainSystem').style.display = 'block';
-                document.getElementById('userInfo').innerText = 'Usuário';
+                document.getElementById('userInfo').innerText = 'USUÁRIO';
                 iniciarSistema();
             } else {
-                document.getElementById('loginError').innerText = 'Usuário ou senha inválidos';
+                document.getElementById('loginError').innerText = 'USUÁRIO OU SENHA INVÁLIDOS';
             }
         }
 
@@ -667,13 +720,10 @@
         // ==================== CONTROLE DE BOTÕES POR PERFIL ====================
         function aplicarPermissoes() {
             if (usuarioLogado.tipo === 'user') {
-                // Desabilitar botões de criação/edição/exclusão
                 document.querySelectorAll('#btnNovoCliente, #btnNovoProduto, #btnNovaEntrada, #btnNovaSaida').forEach(btn => {
                     if (btn) btn.disabled = true;
                 });
-                // Também podemos esconder ou desabilitar ações nas tabelas via CSS/JS posteriormente
             } else {
-                // Admin tem tudo habilitado
                 document.querySelectorAll('#btnNovoCliente, #btnNovoProduto, #btnNovaEntrada, #btnNovaSaida').forEach(btn => {
                     if (btn) btn.disabled = false;
                 });
@@ -773,7 +823,7 @@
             produtos.filter(p => p.nome.toLowerCase().includes(busca) && p.estoque > 0).forEach(p => {
                 const div = document.createElement('div');
                 div.className = 'produto-item d-flex justify-content-between align-items-center';
-                div.innerHTML = `<span><strong>${p.nome}</strong> - R$ ${p.preco.toFixed(2)} (estoque: ${p.estoque})</span>
+                div.innerHTML = `<span><strong>${p.nome}</strong> - R$ ${p.preco.toFixed(2)} (ESTOQUE: ${p.estoque})</span>
                                  <button class="btn btn-sm btn-success rounded-pill" onclick="adicionarItemVenda('${p.id}', '${p.nome}', ${p.preco}, ${p.custo}, ${p.estoque})"><i class="bi bi-plus"></i></button>`;
                 lista.appendChild(div);
             });
@@ -783,14 +833,14 @@
             const existente = itensVenda.find(i => i.produtoId === id);
             if (existente) {
                 if (existente.quantidade + 1 > estoque) {
-                    alert('Quantidade excede o estoque!');
+                    alert('QUANTIDADE EXCEDE O ESTOQUE!');
                     return;
                 }
                 existente.quantidade++;
                 existente.subtotal = existente.quantidade * preco;
             } else {
                 if (1 > estoque) {
-                    alert('Produto sem estoque!');
+                    alert('PRODUTO SEM ESTOQUE!');
                     return;
                 }
                 itensVenda.push({
@@ -811,7 +861,7 @@
             } else {
                 const item = itensVenda[index];
                 if (novaQtd > estoque) {
-                    alert('Quantidade superior ao estoque!');
+                    alert('QUANTIDADE SUPERIOR AO ESTOQUE!');
                     return;
                 }
                 item.quantidade = novaQtd;
@@ -847,19 +897,19 @@
 
         window.finalizarVenda = async function() {
             if (itensVenda.length === 0) {
-                document.getElementById('vendaMsg').innerHTML = '<div class="alert alert-warning rounded-pill">Adicione itens à venda.</div>';
+                document.getElementById('vendaMsg').innerHTML = '<div class="alert alert-warning rounded-pill">ADICIONE ITENS À VENDA.</div>';
                 return;
             }
             let clienteId = document.getElementById('clienteIdVenda').value;
             const novoNome = document.getElementById('novoClienteNome').value.trim();
             if (!clienteId && !novoNome) {
-                document.getElementById('vendaMsg').innerHTML = '<div class="alert alert-warning rounded-pill">Selecione ou cadastre um cliente.</div>';
+                document.getElementById('vendaMsg').innerHTML = '<div class="alert alert-warning rounded-pill">SELECIONE OU CADASTRE UM CLIENTE.</div>';
                 return;
             }
             let clienteNome = '';
             if (!clienteId && novoNome) {
                 if (usuarioLogado.tipo !== 'admin') {
-                    document.getElementById('vendaMsg').innerHTML = '<div class="alert alert-danger rounded-pill">Apenas administradores podem cadastrar novos clientes.</div>';
+                    document.getElementById('vendaMsg').innerHTML = '<div class="alert alert-danger rounded-pill">APENAS ADMINISTRADORES PODEM CADASTRAR NOVOS CLIENTES.</div>';
                     return;
                 }
                 const clientes = await getClientes();
@@ -884,7 +934,7 @@
             for (let item of itensVenda) {
                 const prod = produtos.find(p => p.id === item.produtoId);
                 if (!prod || prod.estoque < item.quantidade) {
-                    document.getElementById('vendaMsg').innerHTML = `<div class="alert alert-danger rounded-pill">Estoque insuficiente para ${item.nome}.</div>`;
+                    document.getElementById('vendaMsg').innerHTML = `<div class="alert alert-danger rounded-pill">ESTOQUE INSUFICIENTE PARA ${item.nome}.</div>`;
                     return;
                 }
             }
@@ -913,7 +963,7 @@
             } else {
                 const recebido = forma === 'dinheiro' ? parseFloat(document.getElementById('valorRecebido').value) || 0 : total;
                 if (forma === 'dinheiro' && recebido < total) {
-                    document.getElementById('vendaMsg').innerHTML = '<div class="alert alert-danger rounded-pill">Valor recebido insuficiente.</div>';
+                    document.getElementById('vendaMsg').innerHTML = '<div class="alert alert-danger rounded-pill">VALOR RECEBIDO INSUFICIENTE.</div>';
                     return;
                 }
 
@@ -946,7 +996,7 @@
 
             itensVenda = [];
             atualizarListaItensVenda();
-            document.getElementById('vendaMsg').innerHTML = '<div class="alert alert-success rounded-pill">Venda finalizada!</div>';
+            document.getElementById('vendaMsg').innerHTML = '<div class="alert alert-success rounded-pill">VENDA FINALIZADA!</div>';
             document.getElementById('valorRecebido').value = '';
             document.getElementById('trocoValor').innerText = '0,00';
             document.getElementById('entradaCredito').value = '';
@@ -957,29 +1007,29 @@
             let html = `
                 <div style="font-family: 'Courier New', monospace; padding: 20px;">
                     <h4 class="text-center">COMPROVANTE DE COMPRA</h4>
-                    <p><strong>Razão Social:</strong> MJ Soluções</p>
-                    <p><strong>Email:</strong> miguelnetomkt@gmail.com</p>
-                    <p><strong>WhatsApp:</strong> <a href="https://w.app/t5dzhj" target="_blank">https://w.app/t5dzhj</a></p>
+                    <p><strong>RAZÃO SOCIAL:</strong> MJ SOLUÇÕES</p>
+                    <p><strong>EMAIL:</strong> MIGUELNETOMKT@GMAIL.COM</p>
+                    <p><strong>WHATSAPP:</strong> <a href="https://w.app/t5dzhj" target="_blank">HTTPS://W.APP/T5DZHJ</a></p>
                     <hr>
-                    <p><strong>Cliente:</strong> ${venda.clienteNome}</p>
+                    <p><strong>CLIENTE:</strong> ${venda.clienteNome}</p>
                     <table style="width:100%; border-collapse: collapse;">
-                        <thead><tr><th>Produto</th><th>Qtd</th><th>Valor Unit.</th><th>Valor Total</th></tr></thead>
+                        <thead><tr><th>PRODUTO</th><th>QTD</th><th>VALOR UNIT.</th><th>VALOR TOTAL</th></tr></thead>
                         <tbody>
             `;
             venda.itens.forEach(i => {
                 html += `<tr><td>${i.nome}</td><td>${i.quantidade}</td><td>R$ ${i.preco.toFixed(2)}</td><td>R$ ${i.subtotal.toFixed(2)}</td></tr>`;
             });
             html += `</tbody></table>`;
-            html += `<p><strong>Data da Compra:</strong> ${new Date().toLocaleString()}</p>`;
-            html += `<p><strong>Forma de Pagamento:</strong> ${venda.forma.toUpperCase()}</p>`;
+            html += `<p><strong>DATA DA COMPRA:</strong> ${new Date().toLocaleString()}</p>`;
+            html += `<p><strong>FORMA DE PAGAMENTO:</strong> ${venda.forma.toUpperCase()}</p>`;
             if (venda.forma === 'dinheiro') {
                 const recebido = parseFloat(document.getElementById('valorRecebido').value) || 0;
                 const troco = recebido - venda.total;
-                html += `<p><strong>Valor recebido:</strong> R$ ${recebido.toFixed(2)}</p>`;
-                html += `<p><strong>Troco:</strong> R$ ${troco.toFixed(2)}</p>`;
+                html += `<p><strong>VALOR RECEBIDO:</strong> R$ ${recebido.toFixed(2)}</p>`;
+                html += `<p><strong>TROCO:</strong> R$ ${troco.toFixed(2)}</p>`;
             }
-            html += `<hr><p class="text-center">Agradecemos a preferência!<br>Este é um comprovante não fiscal.</p>`;
-            html += `<h5 class="text-center">MJ Soluções®</h5></div>`;
+            html += `<hr><p class="text-center">AGRADECEMOS A PREFERÊNCIA!<br>ESTE É UM COMPROVANTE NÃO FISCAL.</p>`;
+            html += `<h5 class="text-center">MJ SOLUÇÕES®</h5></div>`;
             document.getElementById('comprovanteBody').innerHTML = html;
             new bootstrap.Modal(document.getElementById('modalComprovante')).show();
         }
@@ -987,7 +1037,7 @@
         window.imprimirComprovante = function() {
             const conteudo = document.getElementById('comprovanteBody').innerHTML;
             const win = window.open('', '_blank');
-            win.document.write('<html><head><title>Comprovante</title>');
+            win.document.write('<html><head><title>COMPROVANTE</title>');
             win.document.write('<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">');
             win.document.write('</head><body class="p-4">' + conteudo + '</body></html>');
             win.document.close();
@@ -1014,7 +1064,7 @@
                 const acoes = usuarioLogado.tipo === 'admin' 
                     ? `<button class="btn btn-sm btn-outline-success rounded-pill me-2" onclick="editarCliente('${c.id}')"><i class="bi bi-pencil"></i></button>
                        <button class="btn btn-sm btn-outline-danger rounded-pill" onclick="excluirCliente('${c.id}')"><i class="bi bi-trash"></i></button>`
-                    : '<span class="text-muted">Apenas visualização</span>';
+                    : '<span class="text-muted">APENAS VISUALIZAÇÃO</span>';
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td>${c.id.substring(0,6)}...</td>
@@ -1038,7 +1088,7 @@
             document.getElementById('modalClienteCep').value = '';
             document.getElementById('modalClienteEmail').value = '';
             document.getElementById('modalClienteTelefone').value = '';
-            document.getElementById('modalClienteTitle').innerText = 'Novo Cliente';
+            document.getElementById('modalClienteTitle').innerText = 'NOVO CLIENTE';
         };
 
         window.editarCliente = async function(id) {
@@ -1053,7 +1103,7 @@
             document.getElementById('modalClienteCep').value = c.cep || '';
             document.getElementById('modalClienteEmail').value = c.email || '';
             document.getElementById('modalClienteTelefone').value = c.telefone || '';
-            document.getElementById('modalClienteTitle').innerText = 'Editar Cliente';
+            document.getElementById('modalClienteTitle').innerText = 'EDITAR CLIENTE';
             new bootstrap.Modal(document.getElementById('modalCliente')).show();
         };
 
@@ -1069,7 +1119,7 @@
                 email: document.getElementById('modalClienteEmail').value.trim(),
                 telefone: document.getElementById('modalClienteTelefone').value.trim()
             };
-            if (!dados.nome) return alert('Nome é obrigatório.');
+            if (!dados.nome) return alert('NOME É OBRIGATÓRIO.');
             if (id) await db.collection('clientes').doc(id).update(dados);
             else await db.collection('clientes').add(dados);
             await renderClientes();
@@ -1078,7 +1128,7 @@
 
         window.excluirCliente = async function(id) {
             if (usuarioLogado.tipo !== 'admin') return;
-            if (confirm('Excluir cliente?')) {
+            if (confirm('EXCLUIR CLIENTE?')) {
                 await db.collection('clientes').doc(id).delete();
                 await renderClientes();
             }
@@ -1101,7 +1151,7 @@
                 const acoes = usuarioLogado.tipo === 'admin'
                     ? `<button class="btn btn-sm btn-outline-success rounded-pill me-2" onclick="editarProduto('${p.id}')"><i class="bi bi-pencil"></i></button>
                        <button class="btn btn-sm btn-outline-danger rounded-pill" onclick="excluirProduto('${p.id}')"><i class="bi bi-trash"></i></button>`
-                    : '<span class="text-muted">Apenas visualização</span>';
+                    : '<span class="text-muted">APENAS VISUALIZAÇÃO</span>';
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td>${p.id.substring(0,6)}...</td>
@@ -1123,7 +1173,7 @@
             document.getElementById('modalProdutoCusto').value = '';
             document.getElementById('modalProdutoPreco').value = '';
             document.getElementById('modalProdutoEstoque').value = '';
-            document.getElementById('modalProdutoTitle').innerText = 'Novo Produto';
+            document.getElementById('modalProdutoTitle').innerText = 'NOVO PRODUTO';
         };
 
         window.editarProduto = async function(id) {
@@ -1135,7 +1185,7 @@
             document.getElementById('modalProdutoCusto').value = p.custo || '';
             document.getElementById('modalProdutoPreco').value = p.preco || '';
             document.getElementById('modalProdutoEstoque').value = p.estoque || '';
-            document.getElementById('modalProdutoTitle').innerText = 'Editar Produto';
+            document.getElementById('modalProdutoTitle').innerText = 'EDITAR PRODUTO';
             new bootstrap.Modal(document.getElementById('modalProduto')).show();
         };
 
@@ -1149,7 +1199,7 @@
                 estoque: parseInt(document.getElementById('modalProdutoEstoque').value)
             };
             if (!dados.nome || isNaN(dados.custo) || isNaN(dados.preco) || isNaN(dados.estoque)) {
-                return alert('Preencha todos os campos corretamente.');
+                return alert('PREENCHA TODOS OS CAMPOS CORRETAMENTE.');
             }
             if (id) await db.collection('produtos').doc(id).update(dados);
             else await db.collection('produtos').add(dados);
@@ -1159,7 +1209,7 @@
 
         window.excluirProduto = async function(id) {
             if (usuarioLogado.tipo !== 'admin') return;
-            if (confirm('Excluir produto?')) {
+            if (confirm('EXCLUIR PRODUTO?')) {
                 await db.collection('produtos').doc(id).delete();
                 await renderProdutos();
             }
@@ -1184,17 +1234,18 @@
             tbody.innerHTML = '';
             filtrados.forEach(c => {
                 const saldo = c.total - c.entrada - (c.valorParcela * c.parcelasPagas);
-                const status = c.quitado ? 'Quitado' : 'Pendente';
+                const status = c.quitado ? 'QUITADO' : 'PENDENTE';
                 const statusClass = c.quitado ? 'badge-quitado' : 'badge-pendente';
                 const acoes = usuarioLogado.tipo === 'admin' && !c.quitado
-                    ? `<button class="btn btn-sm btn-outline-success rounded-pill" onclick="registrarPagamento('${c.id}')"><i class="bi bi-cash me-1"></i>Pagar</button>`
+                    ? `<button class="btn btn-sm btn-outline-success rounded-pill me-2" onclick="registrarPagamento('${c.id}')"><i class="bi bi-cash me-1"></i>PAGAR</button>
+                       <button class="btn btn-sm btn-outline-warning rounded-pill" onclick="negociarCredito('${c.id}')"><i class="bi bi-arrow-repeat me-1"></i>NEGOCIAR</button>`
                     : '';
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td>${c.clienteNome}</td>
                     <td>R$ ${c.total.toFixed(2)}</td>
                     <td>R$ ${c.entrada.toFixed(2)}</td>
-                    <td>${c.parcelas}x</td>
+                    <td>${c.parcelas}X</td>
                     <td>R$ ${c.valorParcela.toFixed(2)}</td>
                     <td>${c.parcelasPagas}</td>
                     <td>R$ ${saldo.toFixed(2)}</td>
@@ -1211,7 +1262,7 @@
             const doc = await creditoRef.get();
             const c = doc.data();
             if (c.quitado) {
-                alert('Este crédito já está quitado.');
+                alert('ESTE CRÉDITO JÁ ESTÁ QUITADO.');
                 return;
             }
             const novasParcelasPagas = c.parcelasPagas + 1;
@@ -1223,6 +1274,54 @@
             await renderCreditos();
         };
 
+        window.negociarCredito = async function(id) {
+            if (usuarioLogado.tipo !== 'admin') return;
+            const doc = await db.collection('creditos').doc(id).get();
+            const c = doc.data();
+            const saldo = c.total - c.entrada - (c.valorParcela * c.parcelasPagas);
+            document.getElementById('negociarCreditoId').value = id;
+            document.getElementById('negociarClienteNome').innerText = c.clienteNome;
+            document.getElementById('negociarSaldoAtual').innerText = saldo.toFixed(2);
+            document.getElementById('negociarValorPago').value = '';
+            document.getElementById('negociarNovasParcelas').value = '';
+            new bootstrap.Modal(document.getElementById('modalNegociarCredito')).show();
+        };
+
+        window.confirmarNegociacao = async function() {
+            const id = document.getElementById('negociarCreditoId').value;
+            const valorPago = parseFloat(document.getElementById('negociarValorPago').value) || 0;
+            const novasParcelas = document.getElementById('negociarNovasParcelas').value;
+
+            const creditoRef = db.collection('creditos').doc(id);
+            const doc = await creditoRef.get();
+            const c = doc.data();
+            let saldoAtual = c.total - c.entrada - (c.valorParcela * c.parcelasPagas);
+
+            if (valorPago > saldoAtual) {
+                alert('VALOR PAGO NÃO PODE SER MAIOR QUE O SALDO.');
+                return;
+            }
+
+            let novoSaldo = saldoAtual - valorPago;
+            let novasParcelasNum = novasParcelas ? parseInt(novasParcelas) : c.parcelas - c.parcelasPagas;
+            if (novasParcelasNum <= 0) novasParcelasNum = 1;
+
+            const novoValorParcela = novoSaldo / novasParcelasNum;
+            const novaEntrada = c.entrada + valorPago;
+            const novasParcelasPagas = 0; // reinicia a contagem de parcelas pagas para o novo plano
+
+            await creditoRef.update({
+                entrada: novaEntrada,
+                parcelas: novasParcelasNum,
+                valorParcela: novoValorParcela,
+                parcelasPagas: 0,
+                quitado: false
+            });
+
+            bootstrap.Modal.getInstance(document.getElementById('modalNegociarCredito')).hide();
+            await renderCreditos();
+        };
+
         // ==================== GASTOS ====================
         window.limparModalGasto = function(tipo) {
             if (usuarioLogado.tipo !== 'admin') return;
@@ -1231,7 +1330,7 @@
             document.getElementById('gastoData').value = new Date().toISOString().split('T')[0];
             document.getElementById('gastoDescricao').value = '';
             document.getElementById('gastoValor').value = '';
-            document.getElementById('modalGastoTitle').innerText = tipo === 'entrada' ? 'Nova Entrada' : 'Nova Saída';
+            document.getElementById('modalGastoTitle').innerText = tipo === 'entrada' ? 'NOVA ENTRADA' : 'NOVA SAÍDA';
         };
 
         window.salvarGasto = async function() {
@@ -1243,7 +1342,7 @@
                 descricao: document.getElementById('gastoDescricao').value.trim(),
                 valor: parseFloat(document.getElementById('gastoValor').value)
             };
-            if (!dados.data || !dados.descricao || isNaN(dados.valor)) return alert('Preencha todos os campos.');
+            if (!dados.data || !dados.descricao || isNaN(dados.valor)) return alert('PREENC HA TODOS OS CAMPOS.');
             if (id) await db.collection('gastos').doc(id).update(dados);
             else await db.collection('gastos').add(dados);
             await renderGastos();
@@ -1258,7 +1357,14 @@
             let htmlEnt = '<ul class="list-group list-group-flush">';
             entradas.slice(0,10).forEach(g => {
                 htmlEnt += `<li class="list-group-item d-flex justify-content-between align-items-center">
-                    ${g.data} - ${g.descricao} <span class="badge bg-success rounded-pill">R$ ${g.valor.toFixed(2)}</span>
+                    ${g.data} - ${g.descricao} 
+                    <span>
+                        <span class="badge bg-success rounded-pill me-2">R$ ${g.valor.toFixed(2)}</span>
+                        ${usuarioLogado.tipo === 'admin' ? `
+                            <i class="bi bi-pencil text-primary me-2" style="cursor:pointer;" onclick="editarGasto('${g.id}')"></i>
+                            <i class="bi bi-trash text-danger" style="cursor:pointer;" onclick="excluirGasto('${g.id}')"></i>
+                        ` : ''}
+                    </span>
                 </li>`;
             });
             htmlEnt += '</ul>';
@@ -1267,12 +1373,40 @@
             let htmlSai = '<ul class="list-group list-group-flush">';
             saidas.slice(0,10).forEach(g => {
                 htmlSai += `<li class="list-group-item d-flex justify-content-between align-items-center">
-                    ${g.data} - ${g.descricao} <span class="badge bg-danger rounded-pill">R$ ${g.valor.toFixed(2)}</span>
+                    ${g.data} - ${g.descricao} 
+                    <span>
+                        <span class="badge bg-danger rounded-pill me-2">R$ ${g.valor.toFixed(2)}</span>
+                        ${usuarioLogado.tipo === 'admin' ? `
+                            <i class="bi bi-pencil text-primary me-2" style="cursor:pointer;" onclick="editarGasto('${g.id}')"></i>
+                            <i class="bi bi-trash text-danger" style="cursor:pointer;" onclick="excluirGasto('${g.id}')"></i>
+                        ` : ''}
+                    </span>
                 </li>`;
             });
             htmlSai += '</ul>';
             document.getElementById('listaSaidas').innerHTML = htmlSai;
         }
+
+        window.editarGasto = async function(id) {
+            if (usuarioLogado.tipo !== 'admin') return;
+            const doc = await db.collection('gastos').doc(id).get();
+            const g = doc.data();
+            document.getElementById('gastoId').value = id;
+            document.getElementById('gastoTipo').value = g.tipo;
+            document.getElementById('gastoData').value = g.data;
+            document.getElementById('gastoDescricao').value = g.descricao;
+            document.getElementById('gastoValor').value = g.valor;
+            document.getElementById('modalGastoTitle').innerText = g.tipo === 'entrada' ? 'EDITAR ENTRADA' : 'EDITAR SAÍDA';
+            new bootstrap.Modal(document.getElementById('modalGasto')).show();
+        };
+
+        window.excluirGasto = async function(id) {
+            if (usuarioLogado.tipo !== 'admin') return;
+            if (confirm('EXCLUIR GASTO?')) {
+                await db.collection('gastos').doc(id).delete();
+                await renderGastos();
+            }
+        };
 
         // ==================== RELATÓRIOS ====================
         window.gerarRelatorio = async function() {
@@ -1280,9 +1414,9 @@
             const inicio = document.getElementById('relInicio').value;
             const fim = document.getElementById('relFim').value;
 
-            if (!inicio || !fim && tipo !== 'estoque' && tipo !== 'credito') return alert('Selecione o período.');
+            if (!inicio || !fim && tipo !== 'estoque' && tipo !== 'credito') return alert('SELECIONE O PERÍODO.');
 
-            let html = `<h5 class="mb-3">Período: ${inicio || 'Todos'} a ${fim || 'Todos'} | Tipo: ${tipo}</h5>`;
+            let html = `<h5 class="mb-3">PERÍODO: ${inicio || 'TODOS'} A ${fim || 'TODOS'} | TIPO: ${tipo}</h5>`;
 
             if (tipo === 'vendas') {
                 const vendas = await getVendas();
@@ -1294,20 +1428,20 @@
                 const lucro = totalVendas - totalCusto;
                 const margem = totalVendas > 0 ? (lucro / totalVendas) * 100 : 0;
                 html += `<div class="row g-2 mb-3">
-                    <div class="col-md-3"><div class="card bg-light p-2"><h6>Total Vendas</h6><h5 class="text-success">R$ ${formatarMoeda(totalVendas)}</h5></div></div>
-                    <div class="col-md-3"><div class="card bg-light p-2"><h6>Custo Total</h6><h5 class="text-danger">R$ ${formatarMoeda(totalCusto)}</h5></div></div>
-                    <div class="col-md-3"><div class="card bg-light p-2"><h6>Lucro</h6><h5 class="text-primary">R$ ${formatarMoeda(lucro)}</h5></div></div>
-                    <div class="col-md-3"><div class="card bg-light p-2"><h6>Margem</h6><h5>${margem.toFixed(2).replace('.',',')}%</h5></div></div>
+                    <div class="col-md-3"><div class="card bg-light p-2"><h6>TOTAL VENDAS</h6><h5 class="text-success">R$ ${formatarMoeda(totalVendas)}</h5></div></div>
+                    <div class="col-md-3"><div class="card bg-light p-2"><h6>CUSTO TOTAL</h6><h5 class="text-danger">R$ ${formatarMoeda(totalCusto)}</h5></div></div>
+                    <div class="col-md-3"><div class="card bg-light p-2"><h6>LUCRO</h6><h5 class="text-primary">R$ ${formatarMoeda(lucro)}</h5></div></div>
+                    <div class="col-md-3"><div class="card bg-light p-2"><h6>MARGEM</h6><h5>${margem.toFixed(2).replace('.',',')}%</h5></div></div>
                 </div>`;
-                html += `<div class="table-responsive"><table class="table table-sm"><thead><tr><th>Data</th><th>Cliente</th><th>Pagamento</th><th>Total</th></tr></thead><tbody>`;
+                html += `<div class="table-responsive"><table class="table table-sm"><thead><tr><th>DATA</th><th>CLIENTE</th><th>PAGAMENTO</th><th>TOTAL</th></tr></thead><tbody>`;
                 filtradas.forEach(v => {
-                    const cliente = clientes.find(c => c.id === v.clienteId) || { nome: 'Desconhecido' };
+                    const cliente = clientes.find(c => c.id === v.clienteId) || { nome: 'DESCONHECIDO' };
                     html += `<tr><td>${v.data}</td><td>${cliente.nome}</td><td>${v.formaPagamento}</td><td>R$ ${v.total.toFixed(2)}</td></tr>`;
                 });
                 html += `</tbody></table></div>`;
             } else if (tipo === 'estoque') {
                 const produtos = await getProdutos();
-                html += `<div class="table-responsive"><table class="table table-sm"><thead><tr><th>Produto</th><th>Custo</th><th>Preço</th><th>Estoque</th><th>Valor Custo</th><th>Valor Venda</th><th>Margem</th></tr></thead><tbody>`;
+                html += `<div class="table-responsive"><table class="table table-sm"><thead><tr><th>PRODUTO</th><th>CUSTO</th><th>PREÇO</th><th>ESTOQUE</th><th>VALOR CUSTO</th><th>VALOR VENDA</th><th>MARGEM</th></tr></thead><tbody>`;
                 produtos.forEach(p => {
                     const valorCusto = p.custo * p.estoque;
                     const valorVenda = p.preco * p.estoque;
@@ -1320,8 +1454,8 @@
                 let filtrados = gastos.filter(g => g.tipo === 'entrada' && g.data >= inicio && g.data <= fim);
                 filtrados.sort((a,b) => a.data.localeCompare(b.data));
                 const total = filtrados.reduce((acc, g) => acc + g.valor, 0);
-                html += `<div class="alert alert-success">Total de Entradas: R$ ${formatarMoeda(total)}</div>`;
-                html += `<div class="table-responsive"><table class="table table-sm"><thead><tr><th>Data</th><th>Descrição</th><th>Valor</th></tr></thead><tbody>`;
+                html += `<div class="alert alert-success">TOTAL DE ENTRADAS: R$ ${formatarMoeda(total)}</div>`;
+                html += `<div class="table-responsive"><table class="table table-sm"><thead><tr><th>DATA</th><th>DESCRIÇÃO</th><th>VALOR</th></tr></thead><tbody>`;
                 filtrados.forEach(g => html += `<tr><td>${g.data}</td><td>${g.descricao}</td><td>R$ ${g.valor.toFixed(2)}</td></tr>`);
                 html += `</tbody></table></div>`;
             } else if (tipo === 'saidas') {
@@ -1329,19 +1463,19 @@
                 let filtrados = gastos.filter(g => g.tipo === 'saida' && g.data >= inicio && g.data <= fim);
                 filtrados.sort((a,b) => a.data.localeCompare(b.data));
                 const total = filtrados.reduce((acc, g) => acc + g.valor, 0);
-                html += `<div class="alert alert-danger">Total de Saídas: R$ ${formatarMoeda(total)}</div>`;
-                html += `<div class="table-responsive"><table class="table table-sm"><thead><tr><th>Data</th><th>Descrição</th><th>Valor</th></tr></thead><tbody>`;
+                html += `<div class="alert alert-danger">TOTAL DE SAÍDAS: R$ ${formatarMoeda(total)}</div>`;
+                html += `<div class="table-responsive"><table class="table table-sm"><thead><tr><th>DATA</th><th>DESCRIÇÃO</th><th>VALOR</th></tr></thead><tbody>`;
                 filtrados.forEach(g => html += `<tr><td>${g.data}</td><td>${g.descricao}</td><td>R$ ${g.valor.toFixed(2)}</td></tr>`);
                 html += `</tbody></table></div>`;
             } else if (tipo === 'credito') {
                 const creditos = await getCreditos();
                 const totalDevido = creditos.filter(c => !c.quitado).reduce((acc, c) => acc + (c.total - c.entrada - (c.valorParcela * c.parcelasPagas)), 0);
-                html += `<div class="alert alert-warning">Total a Receber: R$ ${formatarMoeda(totalDevido)}</div>`;
-                html += `<div class="table-responsive"><table class="table table-sm"><thead><tr><th>Cliente</th><th>Total</th><th>Entrada</th><th>Parcelas</th><th>Parcelas Pagas</th><th>Saldo</th><th>Status</th></tr></thead><tbody>`;
+                html += `<div class="alert alert-warning">TOTAL A RECEBER: R$ ${formatarMoeda(totalDevido)}</div>`;
+                html += `<div class="table-responsive"><table class="table table-sm"><thead><tr><th>CLIENTE</th><th>TOTAL</th><th>ENTRADA</th><th>PARCELAS</th><th>PARCELAS PAGAS</th><th>SALDO</th><th>STATUS</th></tr></thead><tbody>`;
                 creditos.forEach(c => {
                     const saldo = c.total - c.entrada - (c.valorParcela * c.parcelasPagas);
-                    const status = c.quitado ? 'Quitado' : 'Pendente';
-                    html += `<tr><td>${c.clienteNome}</td><td>R$ ${c.total.toFixed(2)}</td><td>R$ ${c.entrada.toFixed(2)}</td><td>${c.parcelas}x</td><td>${c.parcelasPagas}</td><td>R$ ${saldo.toFixed(2)}</td><td>${status}</td></tr>`;
+                    const status = c.quitado ? 'QUITADO' : 'PENDENTE';
+                    html += `<tr><td>${c.clienteNome}</td><td>R$ ${c.total.toFixed(2)}</td><td>R$ ${c.entrada.toFixed(2)}</td><td>${c.parcelas}X</td><td>${c.parcelasPagas}</td><td>R$ ${saldo.toFixed(2)}</td><td>${status}</td></tr>`;
                 });
                 html += `</tbody></table></div>`;
             }
@@ -1352,13 +1486,107 @@
             const vendas = await getVendas();
             const v = vendas.find(v => v.id === vendaId);
             if (!v) return;
-            let html = '<table class="table"><tr><th>Produto</th><th>Qtd</th><th>Preço</th><th>Subtotal</th></tr>';
+            let html = '<table class="table"><tr><th>PRODUTO</th><th>QTD</th><th>PREÇO</th><th>SUBTOTAL</th></tr>';
             v.itens.forEach(i => {
                 html += `<tr><td>${i.nome}</td><td>${i.quantidade}</td><td>R$ ${i.preco.toFixed(2)}</td><td>R$ ${i.subtotal.toFixed(2)}</td></tr>`;
             });
             html += '</table>';
             document.getElementById('comprovanteBody').innerHTML = html;
             new bootstrap.Modal(document.getElementById('modalComprovante')).show();
+        };
+
+        // ==================== EXPORTAÇÕES ====================
+        window.exportarPDF = async function() {
+            const tipo = document.getElementById('relTipo').value;
+            const inicio = document.getElementById('relInicio').value;
+            const fim = document.getElementById('relFim').value;
+            const conteudo = document.getElementById('relatorioResultado').innerHTML;
+            if (!conteudo.trim()) {
+                alert('GERE UM RELATÓRIO PRIMEIRO.');
+                return;
+            }
+
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            doc.text(`RELATÓRIO: ${tipo.toUpperCase()}`, 14, 20);
+            doc.text(`PERÍODO: ${inicio || 'TODOS'} A ${fim || 'TODOS'}`, 14, 30);
+            
+            // Extrair tabela do HTML
+            const tabela = document.querySelector('#relatorioResultado table');
+            if (tabela) {
+                const headers = [];
+                const rows = [];
+                tabela.querySelectorAll('thead tr th').forEach(th => headers.push(th.innerText));
+                tabela.querySelectorAll('tbody tr').forEach(tr => {
+                    const row = [];
+                    tr.querySelectorAll('td').forEach(td => row.push(td.innerText));
+                    rows.push(row);
+                });
+                doc.autoTable({
+                    head: [headers],
+                    body: rows,
+                    startY: 40,
+                    styles: { fontSize: 8 }
+                });
+            } else {
+                doc.text('RELATÓRIO SEM TABELA.', 14, 40);
+            }
+            doc.save(`relatorio_${tipo}_${inicio || 'todos'}_${fim || 'todos'}.pdf`);
+        };
+
+        window.exportarExcel = async function() {
+            const tipo = document.getElementById('relTipo').value;
+            const inicio = document.getElementById('relInicio').value;
+            const fim = document.getElementById('relFim').value;
+            const tabela = document.querySelector('#relatorioResultado table');
+            if (!tabela) {
+                alert('NENHUMA TABELA PARA EXPORTAR.');
+                return;
+            }
+
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.table_to_sheet(tabela);
+            XLSX.utils.book_append_sheet(wb, ws, 'Relatório');
+            XLSX.writeFile(wb, `relatorio_${tipo}_${inicio || 'todos'}_${fim || 'todos'}.xlsx`);
+        };
+
+        // ==================== FECHAMENTO MENSAL ====================
+        window.fecharMes = async function() {
+            if (usuarioLogado.tipo !== 'admin') {
+                alert('APENAS ADMINISTRADOR PODE FECHAR O MÊS.');
+                return;
+            }
+            if (!confirm('ISSO IRÁ GERAR UM PDF COM OS DADOS DO MÊS ATUAL E EXCLUIR TODAS AS VENDAS E GASTOS DESTE MÊS. OS CRÉDITOS SERÃO MANTIDOS. DESEJA CONTINUAR?')) return;
+
+            const hoje = new Date();
+            const ano = hoje.getFullYear();
+            const mes = String(hoje.getMonth() + 1).padStart(2, '0');
+            const inicio = `${ano}-${mes}-01`;
+            const fim = `${ano}-${mes}-31`; // pega todo o mês
+
+            // Gerar relatório em PDF
+            document.getElementById('relInicio').value = inicio;
+            document.getElementById('relFim').value = fim;
+            document.getElementById('relTipo').value = 'vendas';
+            await gerarRelatorio();
+            await exportarPDF(); // salva PDF
+
+            // Agora excluir vendas e gastos do mês
+            const vendas = await getVendas();
+            const vendasMes = vendas.filter(v => v.data >= inicio && v.data <= fim);
+            for (let v of vendasMes) {
+                await db.collection('vendas').doc(v.id).delete();
+            }
+
+            const gastos = await getGastos();
+            const gastosMes = gastos.filter(g => g.data >= inicio && g.data <= fim);
+            for (let g of gastosMes) {
+                await db.collection('gastos').doc(g.id).delete();
+            }
+
+            alert('MÊS FECHADO! VENDAS E GASTOS DO MÊS FORAM EXCLUÍDOS.');
+            await renderGastos();
+            await carregarDashboard();
         };
 
         // ==================== DASHBOARD ====================
@@ -1397,7 +1625,7 @@
                 data: {
                     labels: ultimos7.map(d => d.substring(5)),
                     datasets: [{
-                        label: 'Vendas (R$)',
+                        label: 'VENDAS (R$)',
                         data: valoresPorDia,
                         borderColor: '#10b981',
                         backgroundColor: 'rgba(16,185,129,0.1)',
@@ -1426,7 +1654,7 @@
                 data: {
                     labels: nomes,
                     datasets: [{
-                        label: 'Quantidade Vendida',
+                        label: 'QUANTIDADE VENDIDA',
                         data: quantidades,
                         backgroundColor: '#3b82f6'
                     }]
@@ -1434,15 +1662,6 @@
                 options: { responsive: true, maintainAspectRatio: false, indexAxis: 'y' }
             });
         }
-
-        // ==================== EXPORTAÇÕES (simplificadas) ====================
-        window.exportarPDF = async function() {
-            alert('Função exportar PDF será implementada em breve.');
-        };
-
-        window.exportarExcel = async function() {
-            alert('Função exportar Excel será implementada em breve.');
-        };
     </script>
 </body>
 </html>
