@@ -311,8 +311,17 @@
 
             <!-- ABA RELATÓRIOS -->
             <div class="tab-pane fade" id="relatorios" role="tabpanel">
-                <h4 class="mb-3" style="color: var(--primary-green);"><i class="bi bi-file-text me-2"></i>Relatórios de Vendas</h4>
+                <h4 class="mb-3" style="color: var(--primary-green);"><i class="bi bi-file-text me-2"></i>Relatórios</h4>
                 <div class="row g-3">
+                    <div class="col-md-2">
+                        <label>Tipo</label>
+                        <select id="relTipo" class="form-select">
+                            <option value="vendas">Vendas</option>
+                            <option value="estoque">Estoque</option>
+                            <option value="entradas">Entradas</option>
+                            <option value="saidas">Saídas</option>
+                        </select>
+                    </div>
                     <div class="col-md-3">
                         <label>Data Início</label>
                         <input type="date" id="relInicio" class="form-control">
@@ -321,11 +330,7 @@
                         <label>Data Fim</label>
                         <input type="date" id="relFim" class="form-control">
                     </div>
-                    <div class="col-md-3">
-                        <label>Cliente</label>
-                        <input type="text" id="relCliente" class="form-control" placeholder="Nome">
-                    </div>
-                    <div class="col-md-3 d-flex align-items-end gap-2">
+                    <div class="col-md-4 d-flex align-items-end gap-2">
                         <button class="btn btn-success" onclick="gerarRelatorio()"><i class="bi bi-search"></i> Gerar</button>
                         <button class="btn btn-primary" onclick="exportarPDF()"><i class="bi bi-file-pdf"></i> PDF</button>
                         <button class="btn btn-success" onclick="exportarExcel()"><i class="bi bi-file-excel"></i> Excel</button>
@@ -481,7 +486,7 @@
     <!-- Rodapé -->
     <footer class="footer text-center">
         <div class="container">
-            <span>MJ Soluções - Sistema de Gestão v2.0</span>
+            <span>MJ Soluções - Sistema de Gestão v3.0</span>
         </div>
     </footer>
 
@@ -993,49 +998,92 @@
 
         // ==================== RELATÓRIOS ====================
         window.gerarRelatorio = async function() {
+            const tipo = document.getElementById('relTipo').value;
             const inicio = document.getElementById('relInicio').value;
             const fim = document.getElementById('relFim').value;
-            const filtroCliente = document.getElementById('relCliente').value.toLowerCase();
+
             if (!inicio || !fim) return alert('Selecione o período.');
 
-            const vendas = await getVendas();
-            const clientes = await getClientes();
+            let html = `<h5>Período: ${inicio} a ${fim} | Tipo: ${tipo}</h5>`;
 
-            let filtradas = vendas.filter(v => v.data >= inicio && v.data <= fim);
-            if (filtroCliente) {
-                const idsClientes = clientes.filter(c => c.nome.toLowerCase().includes(filtroCliente)).map(c => c.id);
-                filtradas = filtradas.filter(v => idsClientes.includes(v.clienteId));
-            }
+            if (tipo === 'vendas') {
+                const vendas = await getVendas();
+                const clientes = await getClientes();
 
-            const totalVendas = filtradas.reduce((acc, v) => acc + v.total, 0);
-            const totalCusto = filtradas.reduce((acc, v) => acc + v.itens.reduce((sub, i) => sub + i.custo * i.quantidade, 0), 0);
-            const lucro = totalVendas - totalCusto;
-            const margem = totalVendas > 0 ? (lucro / totalVendas) * 100 : 0;
+                let filtradas = vendas.filter(v => v.data >= inicio && v.data <= fim);
+                filtradas.sort((a,b) => a.data.localeCompare(b.data));
 
-            let html = `
-                <h5>Período: ${inicio} a ${fim}</h5>
-                <div class="row g-2 mb-3">
+                const totalVendas = filtradas.reduce((acc, v) => acc + v.total, 0);
+                const totalCusto = filtradas.reduce((acc, v) => acc + v.itens.reduce((sub, i) => sub + i.custo * i.quantidade, 0), 0);
+                const lucro = totalVendas - totalCusto;
+                const margem = totalVendas > 0 ? (lucro / totalVendas) * 100 : 0;
+
+                html += `<div class="row g-2 mb-3">
                     <div class="col-md-3"><div class="card bg-light p-2"><h6>Total Vendas</h6><h5 class="text-success">R$ ${formatarMoeda(totalVendas)}</h5></div></div>
                     <div class="col-md-3"><div class="card bg-light p-2"><h6>Custo Total</h6><h5 class="text-danger">R$ ${formatarMoeda(totalCusto)}</h5></div></div>
                     <div class="col-md-3"><div class="card bg-light p-2"><h6>Lucro</h6><h5 class="text-primary">R$ ${formatarMoeda(lucro)}</h5></div></div>
                     <div class="col-md-3"><div class="card bg-light p-2"><h6>Margem</h6><h5>${margem.toFixed(2).replace('.',',')}%</h5></div></div>
-                </div>
-                <table class="table table-sm">
-                    <thead><tr><th>Data</th><th>Cliente</th><th>Pagamento</th><th>Total</th><th>Itens</th></tr></thead>
-                    <tbody>
-            `;
-            filtradas.sort((a,b) => a.data.localeCompare(b.data));
-            for (let v of filtradas) {
-                const cliente = clientes.find(c => c.id === v.clienteId) || { nome: 'Desconhecido' };
-                html += `<tr>
-                    <td>${v.data}</td>
-                    <td>${cliente.nome}</td>
-                    <td>${v.formaPagamento}</td>
-                    <td>R$ ${v.total.toFixed(2)}</td>
-                    <td><button class="btn btn-sm btn-outline-success" onclick="verItensVenda('${v.id}')">Ver</button></td>
-                </tr>`;
+                </div>`;
+
+                html += `<table class="table table-sm"><thead><tr><th>Data</th><th>Cliente</th><th>Pagamento</th><th>Total</th><th>Itens</th></tr></thead><tbody>`;
+                for (let v of filtradas) {
+                    const cliente = clientes.find(c => c.id === v.clienteId) || { nome: 'Desconhecido' };
+                    html += `<tr>
+                        <td>${v.data}</td>
+                        <td>${cliente.nome}</td>
+                        <td>${v.formaPagamento}</td>
+                        <td>R$ ${v.total.toFixed(2)}</td>
+                        <td><button class="btn btn-sm btn-outline-success" onclick="verItensVenda('${v.id}')">Ver</button></td>
+                    </tr>`;
+                }
+                html += `</tbody></table>`;
+
+            } else if (tipo === 'estoque') {
+                const produtos = await getProdutos();
+                html += `<table class="table table-sm"><thead><tr><th>Produto</th><th>Custo</th><th>Preço</th><th>Estoque</th><th>Valor Custo</th><th>Valor Venda</th><th>Margem</th></tr></thead><tbody>`;
+                produtos.forEach(p => {
+                    const valorCusto = p.custo * p.estoque;
+                    const valorVenda = p.preco * p.estoque;
+                    const margem = p.custo > 0 ? ((p.preco - p.custo) / p.custo * 100).toFixed(2) : 0;
+                    html += `<tr>
+                        <td>${p.nome}</td>
+                        <td>R$ ${p.custo.toFixed(2)}</td>
+                        <td>R$ ${p.preco.toFixed(2)}</td>
+                        <td>${p.estoque}</td>
+                        <td>R$ ${valorCusto.toFixed(2)}</td>
+                        <td>R$ ${valorVenda.toFixed(2)}</td>
+                        <td>${margem}%</td>
+                    </tr>`;
+                });
+                html += `</tbody></table>`;
+
+            } else if (tipo === 'entradas') {
+                const gastos = await getGastos();
+                let filtrados = gastos.filter(g => g.tipo === 'entrada' && g.data >= inicio && g.data <= fim);
+                filtrados.sort((a,b) => a.data.localeCompare(b.data));
+
+                const total = filtrados.reduce((acc, g) => acc + g.valor, 0);
+                html += `<div class="alert alert-success">Total de Entradas: R$ ${formatarMoeda(total)}</div>`;
+                html += `<table class="table table-sm"><thead><tr><th>Data</th><th>Descrição</th><th>Valor</th></tr></thead><tbody>`;
+                filtrados.forEach(g => {
+                    html += `<tr><td>${g.data}</td><td>${g.descricao}</td><td>R$ ${g.valor.toFixed(2)}</td></tr>`;
+                });
+                html += `</tbody></table>`;
+
+            } else if (tipo === 'saidas') {
+                const gastos = await getGastos();
+                let filtrados = gastos.filter(g => g.tipo === 'saida' && g.data >= inicio && g.data <= fim);
+                filtrados.sort((a,b) => a.data.localeCompare(b.data));
+
+                const total = filtrados.reduce((acc, g) => acc + g.valor, 0);
+                html += `<div class="alert alert-danger">Total de Saídas: R$ ${formatarMoeda(total)}</div>`;
+                html += `<table class="table table-sm"><thead><tr><th>Data</th><th>Descrição</th><th>Valor</th></tr></thead><tbody>`;
+                filtrados.forEach(g => {
+                    html += `<tr><td>${g.data}</td><td>${g.descricao}</td><td>R$ ${g.valor.toFixed(2)}</td></tr>`;
+                });
+                html += `</tbody></table>`;
             }
-            html += '</tbody></table>';
+
             document.getElementById('relatorioResultado').innerHTML = html;
         };
 
@@ -1053,53 +1101,128 @@
         };
 
         window.exportarPDF = async function() {
+            const tipo = document.getElementById('relTipo').value;
             const inicio = document.getElementById('relInicio').value;
             const fim = document.getElementById('relFim').value;
             if (!inicio || !fim) return alert('Selecione o período.');
+
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
             doc.setFontSize(18).setTextColor(46,204,113).text('MJ Soluções',14,20);
-            doc.setFontSize(12).setTextColor(0,0,0).text(`Relatório de Vendas ${inicio} a ${fim}`,14,30);
+            doc.setFontSize(12).setTextColor(0,0,0).text(`Relatório ${tipo} - ${inicio} a ${fim}`,14,30);
 
-            const vendas = await getVendas();
-            const clientes = await getClientes();
-            const filtradas = vendas.filter(v => v.data >= inicio && v.data <= fim);
-            const totalVendas = filtradas.reduce((acc, v) => acc + v.total, 0);
-            doc.setFontSize(10).text(`Total de Vendas: R$ ${totalVendas.toFixed(2)}`,14,40);
+            if (tipo === 'vendas') {
+                const vendas = await getVendas();
+                const clientes = await getClientes();
+                const filtradas = vendas.filter(v => v.data >= inicio && v.data <= fim);
+                const totalVendas = filtradas.reduce((acc, v) => acc + v.total, 0);
+                doc.setFontSize(10).text(`Total de Vendas: R$ ${totalVendas.toFixed(2)}`,14,40);
 
-            const body = filtradas.map(v => {
-                const cliente = clientes.find(c => c.id === v.clienteId) || { nome: 'Desconhecido' };
-                return [v.data, cliente.nome, v.formaPagamento, `R$ ${v.total.toFixed(2)}`];
-            });
-            doc.autoTable({
-                startY: 50,
-                head: [['Data','Cliente','Pagamento','Total']],
-                body: body,
-                headStyles: { fillColor: [46,204,113] }
-            });
-            doc.save(`relatorio_vendas_${inicio}_a_${fim}.pdf`);
+                const body = filtradas.map(v => {
+                    const cliente = clientes.find(c => c.id === v.clienteId) || { nome: 'Desconhecido' };
+                    return [v.data, cliente.nome, v.formaPagamento, `R$ ${v.total.toFixed(2)}`];
+                });
+                doc.autoTable({
+                    startY: 50,
+                    head: [['Data','Cliente','Pagamento','Total']],
+                    body: body,
+                    headStyles: { fillColor: [46,204,113] }
+                });
+            } else if (tipo === 'estoque') {
+                const produtos = await getProdutos();
+                doc.autoTable({
+                    startY: 40,
+                    head: [['Produto','Custo','Preço','Estoque','Valor Custo','Valor Venda','Margem']],
+                    body: produtos.map(p => [
+                        p.nome,
+                        `R$ ${p.custo.toFixed(2)}`,
+                        `R$ ${p.preco.toFixed(2)}`,
+                        p.estoque,
+                        `R$ ${(p.custo * p.estoque).toFixed(2)}`,
+                        `R$ ${(p.preco * p.estoque).toFixed(2)}`,
+                        p.custo > 0 ? ((p.preco - p.custo) / p.custo * 100).toFixed(2) + '%' : '0%'
+                    ]),
+                    headStyles: { fillColor: [46,204,113] }
+                });
+            } else if (tipo === 'entradas') {
+                const gastos = await getGastos();
+                const filtrados = gastos.filter(g => g.tipo === 'entrada' && g.data >= inicio && g.data <= fim);
+                const total = filtrados.reduce((acc, g) => acc + g.valor, 0);
+                doc.setFontSize(10).text(`Total Entradas: R$ ${total.toFixed(2)}`,14,40);
+                doc.autoTable({
+                    startY: 50,
+                    head: [['Data','Descrição','Valor']],
+                    body: filtrados.map(g => [g.data, g.descricao, `R$ ${g.valor.toFixed(2)}`]),
+                    headStyles: { fillColor: [46,204,113] }
+                });
+            } else if (tipo === 'saidas') {
+                const gastos = await getGastos();
+                const filtrados = gastos.filter(g => g.tipo === 'saida' && g.data >= inicio && g.data <= fim);
+                const total = filtrados.reduce((acc, g) => acc + g.valor, 0);
+                doc.setFontSize(10).text(`Total Saídas: R$ ${total.toFixed(2)}`,14,40);
+                doc.autoTable({
+                    startY: 50,
+                    head: [['Data','Descrição','Valor']],
+                    body: filtrados.map(g => [g.data, g.descricao, `R$ ${g.valor.toFixed(2)}`]),
+                    headStyles: { fillColor: [46,204,113] }
+                });
+            }
+            doc.save(`relatorio_${tipo}_${inicio}_a_${fim}.pdf`);
         };
 
         window.exportarExcel = async function() {
+            const tipo = document.getElementById('relTipo').value;
             const inicio = document.getElementById('relInicio').value;
             const fim = document.getElementById('relFim').value;
             if (!inicio || !fim) return alert('Selecione o período.');
-            const vendas = await getVendas();
-            const clientes = await getClientes();
-            const filtradas = vendas.filter(v => v.data >= inicio && v.data <= fim);
-            const dados = filtradas.map(v => {
-                const cliente = clientes.find(c => c.id === v.clienteId) || { nome: 'Desconhecido' };
-                return {
-                    Data: v.data,
-                    Cliente: cliente.nome,
-                    Pagamento: v.formaPagamento,
-                    Total: v.total
-                };
-            });
+
+            let dados = [];
+            if (tipo === 'vendas') {
+                const vendas = await getVendas();
+                const clientes = await getClientes();
+                const filtradas = vendas.filter(v => v.data >= inicio && v.data <= fim);
+                dados = filtradas.map(v => {
+                    const cliente = clientes.find(c => c.id === v.clienteId) || { nome: 'Desconhecido' };
+                    return {
+                        Data: v.data,
+                        Cliente: cliente.nome,
+                        Pagamento: v.formaPagamento,
+                        Total: v.total
+                    };
+                });
+            } else if (tipo === 'estoque') {
+                const produtos = await getProdutos();
+                dados = produtos.map(p => ({
+                    Produto: p.nome,
+                    Custo: p.custo,
+                    Preço: p.preco,
+                    Estoque: p.estoque,
+                    'Valor Custo': p.custo * p.estoque,
+                    'Valor Venda': p.preco * p.estoque,
+                    Margem: p.custo > 0 ? ((p.preco - p.custo) / p.custo * 100).toFixed(2) + '%' : '0%'
+                }));
+            } else if (tipo === 'entradas') {
+                const gastos = await getGastos();
+                const filtrados = gastos.filter(g => g.tipo === 'entrada' && g.data >= inicio && g.data <= fim);
+                dados = filtrados.map(g => ({
+                    Data: g.data,
+                    Descrição: g.descricao,
+                    Valor: g.valor
+                }));
+            } else if (tipo === 'saidas') {
+                const gastos = await getGastos();
+                const filtrados = gastos.filter(g => g.tipo === 'saida' && g.data >= inicio && g.data <= fim);
+                dados = filtrados.map(g => ({
+                    Data: g.data,
+                    Descrição: g.descricao,
+                    Valor: g.valor
+                }));
+            }
+
             const ws = XLSX.utils.json_to_sheet(dados);
             const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, 'Vendas');
-            XLSX.writeFile(wb, `relatorio_vendas_${inicio}_a_${fim}.xlsx`);
+            XLSX.utils.book_append_sheet(wb, ws, 'Relatório');
+            XLSX.writeFile(wb, `relatorio_${tipo}_${inicio}_a_${fim}.xlsx`);
         };
 
         // ==================== DASHBOARD ====================
