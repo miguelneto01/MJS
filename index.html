@@ -1607,37 +1607,68 @@
             const tipo = document.getElementById('relTipo').value;
             const inicio = document.getElementById('relInicio').value;
             const fim = document.getElementById('relFim').value;
-            const conteudo = document.getElementById('relatorioResultado').innerHTML;
-            if (!conteudo.trim()) {
+            const conteudo = document.getElementById('relatorioResultado');
+            if (!conteudo.innerHTML.trim()) {
                 alert('GERE UM RELATÓRIO PRIMEIRO.');
                 return;
             }
 
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
-            doc.text(`RELATÓRIO: ${tipo.toUpperCase()}`, 14, 20);
-            doc.text(`PERÍODO: ${inicio || 'TODOS'} A ${fim || 'TODOS'}`, 14, 30);
-            
-            // Extrair tabela do HTML
-            const tabela = document.querySelector('#relatorioResultado table');
-            if (tabela) {
-                const headers = [];
-                const rows = [];
-                tabela.querySelectorAll('thead tr th').forEach(th => headers.push(th.innerText));
-                tabela.querySelectorAll('tbody tr').forEach(tr => {
-                    const row = [];
-                    tr.querySelectorAll('td').forEach(td => row.push(td.innerText));
-                    rows.push(row);
+            let y = 20;
+
+            doc.text(`RELATÓRIO: ${tipo.toUpperCase()}`, 14, y);
+            y += 10;
+            doc.text(`PERÍODO: ${inicio || 'TODOS'} A ${fim || 'TODOS'}`, 14, y);
+            y += 10;
+
+            // Extrair todos os cards de resumo (se houver)
+            const cards = conteudo.querySelectorAll('.card.bg-light');
+            if (cards.length > 0) {
+                let cardText = '';
+                cards.forEach(card => {
+                    const title = card.querySelector('h6')?.innerText || '';
+                    const value = card.querySelector('h5')?.innerText || '';
+                    cardText += `${title}: ${value}  `;
                 });
-                doc.autoTable({
-                    head: [headers],
-                    body: rows,
-                    startY: 40,
-                    styles: { fontSize: 8 }
-                });
-            } else {
-                doc.text('RELATÓRIO SEM TABELA.', 14, 40);
+                doc.text(cardText, 14, y);
+                y += 10;
             }
+
+            // Extrair todas as tabelas
+            const tabelas = conteudo.querySelectorAll('table');
+            if (tabelas.length === 0) {
+                doc.text('RELATÓRIO SEM TABELAS.', 14, y);
+            } else {
+                for (let i = 0; i < tabelas.length; i++) {
+                    const tabela = tabelas[i];
+                    // Título da seção (baseado no heading anterior)
+                    const prevHeading = tabela.previousElementSibling;
+                    if (prevHeading && prevHeading.tagName === 'H6') {
+                        doc.text(prevHeading.innerText, 14, y);
+                        y += 6;
+                    }
+
+                    const headers = [];
+                    const rows = [];
+                    tabela.querySelectorAll('thead tr th').forEach(th => headers.push(th.innerText));
+                    tabela.querySelectorAll('tbody tr').forEach(tr => {
+                        const row = [];
+                        tr.querySelectorAll('td').forEach(td => row.push(td.innerText));
+                        rows.push(row);
+                    });
+
+                    doc.autoTable({
+                        head: [headers],
+                        body: rows,
+                        startY: y,
+                        styles: { fontSize: 8 },
+                        margin: { left: 14 }
+                    });
+                    y = doc.lastAutoTable.finalY + 10; // atualiza a posição Y após a tabela
+                }
+            }
+
             doc.save(`relatorio_${tipo}_${inicio || 'todos'}_${fim || 'todos'}.pdf`);
         };
 
@@ -1671,12 +1702,12 @@
             const inicio = `${ano}-${mes}-01`;
             const fim = `${ano}-${mes}-31`; // pega todo o mês
 
-            // Gerar relatório em PDF
+            // Gerar relatório completo (tipo 'todos')
             document.getElementById('relInicio').value = inicio;
             document.getElementById('relFim').value = fim;
-            document.getElementById('relTipo').value = 'vendas';
+            document.getElementById('relTipo').value = 'todos';
             await gerarRelatorio();
-            await exportarPDF(); // salva PDF
+            await exportarPDF(); // salva PDF com todas as seções
 
             // Agora excluir vendas e gastos do mês
             const vendas = await getVendas();
