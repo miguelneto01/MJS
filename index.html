@@ -34,12 +34,11 @@
         * {
             font-family: 'Inter', sans-serif;
         }
-        /* CAIXA ALTA em todo o sistema, exceto inputs */
         body, .modal, .card, .navbar, .footer, .btn, th, td, label, h1, h2, h3, h4, h5, h6, span, div {
             text-transform: uppercase;
         }
         input, textarea, select, .form-control, .form-select {
-            text-transform: none !important; /* mantém o texto digitado normal */
+            text-transform: none !important;
         }
         body {
             background-color: var(--light-gray);
@@ -195,10 +194,6 @@
             background: rgba(255,255,255,0.7);
             backdrop-filter: blur(20px);
             border: 1px solid rgba(255,255,255,0.5);
-        }
-        /* Ajustes para inputs dentro de caixa alta */
-        .form-control, .form-select {
-            text-transform: none;
         }
     </style>
 </head>
@@ -432,6 +427,7 @@
                                 <option value="entradas">ENTRADAS</option>
                                 <option value="saidas">SAÍDAS</option>
                                 <option value="credito">CRÉDITO (FIADO)</option>
+                                <option value="todos">TODOS (EXTRATO COMPLETO)</option>
                             </select>
                         </div>
                         <div class="col-md-3">
@@ -610,7 +606,7 @@
                                 <option value="6">6X</option>
                             </select>
                         </div>
-                        <small class="text-muted">SE INFORMAR VALOR, ELE SERÁ ABATIDO DO SALDO. SE INFORMAR PARCELAS, O RESTANTE SERÁ DIVIDIDO.</small>
+                        <small class="text-muted">SE INFORMAR VALOR, ELE SERÁ ABATIDO DO SALDO E LANÇADO COMO ENTRADA. SE INFORMAR PARCELAS, O RESTANTE SERÁ DIVIDIDO.</small>
                     </div>
                     <div class="modal-footer border-0">
                         <button class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">CANCELAR</button>
@@ -640,7 +636,7 @@
         <!-- Rodapé -->
         <footer class="footer text-center">
             <div class="container">
-                <span class="opacity-75">MJ SOLUÇÕES - SISTEMA DE GESTÃO V6.0</span>
+                <span class="opacity-75">MJ SOLUÇÕES - SISTEMA DE GESTÃO V7.0</span>
             </div>
         </footer>
     </div>
@@ -912,7 +908,6 @@
                     document.getElementById('vendaMsg').innerHTML = '<div class="alert alert-danger rounded-pill">APENAS ADMINISTRADORES PODEM CADASTRAR NOVOS CLIENTES.</div>';
                     return;
                 }
-                const clientes = await getClientes();
                 const novoCliente = {
                     nome: novoNome,
                     endereco: document.getElementById('novoClienteEndereco').value.trim(),
@@ -1001,6 +996,9 @@
             document.getElementById('trocoValor').innerText = '0,00';
             document.getElementById('entradaCredito').value = '';
             await carregarVenda();
+            await renderCreditos(); // Atualiza créditos se necessário
+            await renderGastos(); // Atualiza gastos se houve entrada
+            await carregarDashboard(); // Atualiza dashboard
         };
 
         function exibirComprovante(venda) {
@@ -1271,7 +1269,19 @@
                 parcelasPagas: novasParcelasPagas,
                 quitado: quitado
             });
+
+            // Registrar entrada financeira
+            const valorPago = c.valorParcela; // valor da parcela paga
+            await db.collection('gastos').add({
+                tipo: 'entrada',
+                data: new Date().toISOString().split('T')[0],
+                descricao: `PAGAMENTO DE CRÉDITO - ${c.clienteNome}`,
+                valor: valorPago
+            });
+
             await renderCreditos();
+            await renderGastos();
+            await carregarDashboard();
         };
 
         window.negociarCredito = async function(id) {
@@ -1308,7 +1318,7 @@
 
             const novoValorParcela = novoSaldo / novasParcelasNum;
             const novaEntrada = c.entrada + valorPago;
-            const novasParcelasPagas = 0; // reinicia a contagem de parcelas pagas para o novo plano
+            const novasParcelasPagas = 0; // reinicia a contagem
 
             await creditoRef.update({
                 entrada: novaEntrada,
@@ -1318,8 +1328,20 @@
                 quitado: false
             });
 
+            // Se houve pagamento, registrar como entrada
+            if (valorPago > 0) {
+                await db.collection('gastos').add({
+                    tipo: 'entrada',
+                    data: new Date().toISOString().split('T')[0],
+                    descricao: `NEGOCIAÇÃO DE CRÉDITO - ${c.clienteNome}`,
+                    valor: valorPago
+                });
+            }
+
             bootstrap.Modal.getInstance(document.getElementById('modalNegociarCredito')).hide();
             await renderCreditos();
+            await renderGastos();
+            await carregarDashboard();
         };
 
         // ==================== GASTOS ====================
@@ -1342,10 +1364,11 @@
                 descricao: document.getElementById('gastoDescricao').value.trim(),
                 valor: parseFloat(document.getElementById('gastoValor').value)
             };
-            if (!dados.data || !dados.descricao || isNaN(dados.valor)) return alert('PREENC HA TODOS OS CAMPOS.');
+            if (!dados.data || !dados.descricao || isNaN(dados.valor)) return alert('PREENCHA TODOS OS CAMPOS.');
             if (id) await db.collection('gastos').doc(id).update(dados);
             else await db.collection('gastos').add(dados);
             await renderGastos();
+            await carregarDashboard();
             bootstrap.Modal.getInstance(document.getElementById('modalGasto')).hide();
         };
 
@@ -1405,6 +1428,7 @@
             if (confirm('EXCLUIR GASTO?')) {
                 await db.collection('gastos').doc(id).delete();
                 await renderGastos();
+                await carregarDashboard();
             }
         };
 
@@ -1414,9 +1438,9 @@
             const inicio = document.getElementById('relInicio').value;
             const fim = document.getElementById('relFim').value;
 
-            if (!inicio || !fim && tipo !== 'estoque' && tipo !== 'credito') return alert('SELECIONE O PERÍODO.');
+            if (!inicio || !fim && tipo !== 'estoque' && tipo !== 'credito' && tipo !== 'todos') return alert('SELECIONE O PERÍODO.');
 
-            let html = `<h5 class="mb-3">PERÍODO: ${inicio || 'TODOS'} A ${fim || 'TODOS'} | TIPO: ${tipo}</h5>`;
+            let html = `<h5 class="mb-3">PERÍODO: ${inicio || 'TODOS'} A ${fim || 'TODOS'} | TIPO: ${tipo.toUpperCase()}</h5>`;
 
             if (tipo === 'vendas') {
                 const vendas = await getVendas();
@@ -1478,6 +1502,89 @@
                     html += `<tr><td>${c.clienteNome}</td><td>R$ ${c.total.toFixed(2)}</td><td>R$ ${c.entrada.toFixed(2)}</td><td>${c.parcelas}X</td><td>${c.parcelasPagas}</td><td>R$ ${saldo.toFixed(2)}</td><td>${status}</td></tr>`;
                 });
                 html += `</tbody></table></div>`;
+            } else if (tipo === 'todos') {
+                // EXTRATO COMPLETO
+                const vendas = await getVendas();
+                const creditos = await getCreditos();
+                const gastos = await getGastos();
+                const produtos = await getProdutos();
+
+                // Filtra por período
+                const vendasFiltradas = vendas.filter(v => v.data >= inicio && v.data <= fim);
+                const entradasFiltradas = gastos.filter(g => g.tipo === 'entrada' && g.data >= inicio && g.data <= fim);
+                const saidasFiltradas = gastos.filter(g => g.tipo === 'saida' && g.data >= inicio && g.data <= fim);
+                const creditosFiltrados = creditos.filter(c => c.data >= inicio && c.data <= fim);
+
+                const totalVendas = vendasFiltradas.reduce((acc, v) => acc + v.total, 0);
+                const totalEntradas = entradasFiltradas.reduce((acc, g) => acc + g.valor, 0);
+                const totalSaidas = saidasFiltradas.reduce((acc, g) => acc + g.valor, 0);
+                const saldoFinanceiro = totalEntradas - totalSaidas;
+
+                html += `
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-3"><div class="card bg-light p-3"><h6>TOTAL VENDAS</h6><h5 class="text-success">R$ ${formatarMoeda(totalVendas)}</h5></div></div>
+                        <div class="col-md-3"><div class="card bg-light p-3"><h6>TOTAL ENTRADAS</h6><h5 class="text-success">R$ ${formatarMoeda(totalEntradas)}</h5></div></div>
+                        <div class="col-md-3"><div class="card bg-light p-3"><h6>TOTAL SAÍDAS</h6><h5 class="text-danger">R$ ${formatarMoeda(totalSaidas)}</h5></div></div>
+                        <div class="col-md-3"><div class="card bg-light p-3"><h6>SALDO FINANCEIRO</h6><h5 class="text-primary">R$ ${formatarMoeda(saldoFinanceiro)}</h5></div></div>
+                    </div>
+                `;
+
+                html += '<h6 class="mt-4">VENDAS DO PERÍODO</h6>';
+                if (vendasFiltradas.length > 0) {
+                    html += `<div class="table-responsive"><table class="table table-sm"><thead><tr><th>DATA</th><th>CLIENTE</th><th>PAGAMENTO</th><th>TOTAL</th></tr></thead><tbody>`;
+                    vendasFiltradas.forEach(v => {
+                        html += `<tr><td>${v.data}</td><td>${v.clienteNome}</td><td>${v.formaPagamento}</td><td>R$ ${v.total.toFixed(2)}</td></tr>`;
+                    });
+                    html += `</tbody></table></div>`;
+                } else {
+                    html += '<p class="text-muted">NENHUMA VENDA NO PERÍODO.</p>';
+                }
+
+                html += '<h6 class="mt-4">CRÉDITOS (FIADO) DO PERÍODO</h6>';
+                if (creditosFiltrados.length > 0) {
+                    html += `<div class="table-responsive"><table class="table table-sm"><thead><tr><th>CLIENTE</th><th>TOTAL</th><th>ENTRADA</th><th>PARCELAS</th><th>PARCELAS PAGAS</th><th>SALDO</th><th>STATUS</th></tr></thead><tbody>`;
+                    creditosFiltrados.forEach(c => {
+                        const saldo = c.total - c.entrada - (c.valorParcela * c.parcelasPagas);
+                        const status = c.quitado ? 'QUITADO' : 'PENDENTE';
+                        html += `<tr><td>${c.clienteNome}</td><td>R$ ${c.total.toFixed(2)}</td><td>R$ ${c.entrada.toFixed(2)}</td><td>${c.parcelas}X</td><td>${c.parcelasPagas}</td><td>R$ ${saldo.toFixed(2)}</td><td>${status}</td></tr>`;
+                    });
+                    html += `</tbody></table></div>`;
+                } else {
+                    html += '<p class="text-muted">NENHUM CRÉDITO NO PERÍODO.</p>';
+                }
+
+                html += '<h6 class="mt-4">ENTRADAS FINANCEIRAS</h6>';
+                if (entradasFiltradas.length > 0) {
+                    html += `<div class="table-responsive"><table class="table table-sm"><thead><tr><th>DATA</th><th>DESCRIÇÃO</th><th>VALOR</th></tr></thead><tbody>`;
+                    entradasFiltradas.forEach(g => {
+                        html += `<tr><td>${g.data}</td><td>${g.descricao}</td><td>R$ ${g.valor.toFixed(2)}</td></tr>`;
+                    });
+                    html += `</tbody></table></div>`;
+                } else {
+                    html += '<p class="text-muted">NENHUMA ENTRADA NO PERÍODO.</p>';
+                }
+
+                html += '<h6 class="mt-4">SAÍDAS FINANCEIRAS</h6>';
+                if (saidasFiltradas.length > 0) {
+                    html += `<div class="table-responsive"><table class="table table-sm"><thead><tr><th>DATA</th><th>DESCRIÇÃO</th><th>VALOR</th></tr></thead><tbody>`;
+                    saidasFiltradas.forEach(g => {
+                        html += `<tr><td>${g.data}</td><td>${g.descricao}</td><td>R$ ${g.valor.toFixed(2)}</td></tr>`;
+                    });
+                    html += `</tbody></table></div>`;
+                } else {
+                    html += '<p class="text-muted">NENHUMA SAÍDA NO PERÍODO.</p>';
+                }
+
+                html += '<h6 class="mt-4">ESTOQUE ATUAL</h6>';
+                if (produtos.length > 0) {
+                    html += `<div class="table-responsive"><table class="table table-sm"><thead><tr><th>PRODUTO</th><th>ESTOQUE</th><th>PREÇO</th><th>VALOR EM ESTOQUE</th></tr></thead><tbody>`;
+                    produtos.forEach(p => {
+                        html += `<tr><td>${p.nome}</td><td>${p.estoque}</td><td>R$ ${p.preco.toFixed(2)}</td><td>R$ ${(p.preco * p.estoque).toFixed(2)}</td></tr>`;
+                    });
+                    html += `</tbody></table></div>`;
+                } else {
+                    html += '<p class="text-muted">NENHUM PRODUTO CADASTRADO.</p>';
+                }
             }
             document.getElementById('relatorioResultado').innerHTML = html;
         };
